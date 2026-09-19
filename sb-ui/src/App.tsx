@@ -3,7 +3,7 @@ import Home from "./pages/users/Home"
 import Login from "./pages/auth/Login"
 import UserLayout from "./layout/UserLayout"
 import Profile from "./pages/users/Profile"
-import AuthLayout from "./layout/AuthLayout"
+import Register from "./pages/auth/Register"
 function App() {
 
   const router = createBrowserRouter([
@@ -17,15 +17,18 @@ function App() {
     },
     {
       path: "/login",
-      element: <AuthLayout />,
       children: [
-        {index: true, element: <Login />}
+        {index: true, element: <Login />},
       ]
+    },
+    {
+      path: "/register",
+      element: <Register />
     }
   ])
   return (
     <>
-      <RouterProvider router={router} />;
+      <RouterProvider router={router} />
     </>
   )
 }

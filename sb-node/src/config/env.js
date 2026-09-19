@@ -1,0 +1,154 @@
+const path = require("path");
+const dotenv = require("dotenv");
+
+dotenv.config({
+  path: path.resolve(__dirname, "..", "..", ".env"),
+  quiet: true,
+});
+
+const readRequiredString = (key) => {
+  const value = process.env[key];
+
+  if (!value || !value.trim()) {
+    throw new Error(`Missing required environment variable: ${key}`);
+  }
+
+  return value.trim();
+};
+
+const readOptionalString = (key, defaultValue = "") => {
+  const value = process.env[key];
+
+  return value === undefined ? defaultValue : value.trim();
+};
+
+const readBoolean = (key, defaultValue = false) => {
+  const value = process.env[key];
+
+  if (value === undefined || value === "") {
+    return defaultValue;
+  }
+
+  return ["1", "true", "yes"].includes(value.trim().toLowerCase());
+};
+
+const readInteger = (key, defaultValue, { min, max } = {}) => {
+  const rawValue = process.env[key];
+
+  if (rawValue === undefined || rawValue === "") {
+    return defaultValue;
+  }
+
+  const value = Number(rawValue);
+
+  if (!Number.isInteger(value)) {
+    throw new Error(`Environment variable ${key} must be an integer`);
+  }
+
+  if (min !== undefined && value < min) {
+    throw new Error(`Environment variable ${key} must be greater than or equal to ${min}`);
+  }
+
+  if (max !== undefined && value > max) {
+    throw new Error(`Environment variable ${key} must be less than or equal to ${max}`);
+  }
+
+  return value;
+};
+
+const normalizeOrigin = (value) => {
+  if (!value) {
+    return "";
+  }
+
+  try {
+    return new URL(value.trim()).origin;
+  } catch (_error) {
+    return value.trim().replace(/\/$/, "");
+  }
+};
+
+const readSameSite = () => {
+  const value = readOptionalString("COOKIE_SAME_SITE", "lax").toLowerCase();
+  const allowedValues = ["strict", "lax", "none"];
+
+  if (!allowedValues.includes(value)) {
+    throw new Error("COOKIE_SAME_SITE must be one of: strict, lax, none");
+  }
+
+  return value;
+};
+
+const readJwtSecret = (key, fallbackKey) => {
+  const value = readOptionalString(key);
+
+  if (value) {
+    return value;
+  }
+
+  return readRequiredString(fallbackKey);
+};
+
+const configuredCorsOrigins = readOptionalString("CORS_ORIGIN")
+  .split(",")
+  .map(normalizeOrigin)
+  .filter(Boolean);
+
+const nodeEnv = process.env.NODE_ENV || "development";
+const isProduction = nodeEnv === "production";
+const cookieSameSite = readSameSite();
+const cookieSecure = readBoolean("COOKIE_SECURE", isProduction);
+
+if (cookieSameSite === "none" && !cookieSecure) {
+  throw new Error("COOKIE_SAME_SITE=none requires COOKIE_SECURE=true");
+}
+
+const config = Object.freeze({
+  nodeEnv,
+  isProduction,
+  app: Object.freeze({
+    port: readInteger("PORT", 8080, { min: 1, max: 65535 }),
+    frontendUrl: normalizeOrigin(
+      readOptionalString("FRONTEND_URL", configuredCorsOrigins[0] || "http://localhost:3000"),
+    ),
+  }),
+  auth: Object.freeze({
+    accessTokenSecret: readJwtSecret("JWT_ACCESS_SECRET", "JWT_SECRET"),
+    refreshTokenSecret: readJwtSecret("JWT_REFRESH_SECRET", "JWT_SECRET"),
+    accessTokenExpiresIn: readOptionalString("JWT_ACCESS_EXPIRES_IN", "15m"),
+    refreshTokenExpiresIn: readOptionalString("JWT_REFRESH_EXPIRES_IN", "7d"),
+    bcryptSaltRounds: readInteger("BCRYPT_SALT_ROUNDS", 12, { min: 8, max: 15 }),
+  }),
+  cookie: Object.freeze({
+    secure: cookieSecure,
+    sameSite: cookieSameSite,
+  }),
+  cors: Object.freeze({
+    origins: configuredCorsOrigins,
+  }),
+  upload: Object.freeze({
+    avatarMaxFileSize: readInteger("AVATAR_MAX_FILE_SIZE", 2 * 1024 * 1024, {
+      min: 100 * 1024,
+    }),
+    postMediaMaxFileSize: readInteger("POST_MEDIA_MAX_FILE_SIZE", 10 * 1024 * 1024, {
+      min: 100 * 1024,
+    }),
+    postMediaMaxFiles: readInteger("POST_MEDIA_MAX_FILES", 10, { min: 1, max: 50 }),
+    reelVideoMaxFileSize: readInteger("REEL_VIDEO_MAX_FILE_SIZE", 80 * 1024 * 1024, {
+      min: 1024 * 1024,
+    }),
+  }),
+  database: Object.freeze({
+    host: readRequiredString("DB_HOST"),
+    port: readInteger("DB_PORT", 3306, { min: 1, max: 65535 }),
+    user: readRequiredString("DB_USER"),
+    password: readOptionalString("DB_PASS"),
+    name: readRequiredString("DB_NAME"),
+    connectionLimit: readInteger("DB_CONNECTION_LIMIT", 10, { min: 1 }),
+    queueLimit: readInteger("DB_QUEUE_LIMIT", 0, { min: 0 }),
+    connectTimeout: readInteger("DB_CONNECT_TIMEOUT", 10000, { min: 1000 }),
+    ssl: readBoolean("DB_SSL"),
+  }),
+});
+
+module.exports = config;
