@@ -1,12 +1,42 @@
 import { RiEyeLine, RiEyeOffLine } from "@remixicon/react";
-import { useState } from "react";
+import { useState, type ChangeEvent } from "react";
 import { Link } from "react-router-dom";
+import { register } from "../../services/api";
+
 function Register() {
-     const [isShowPassowrd, setIsShowPassword] = useState(false);
+     const [isShowPassowrd, setIsShowPassword] = useState<boolean>(false);
+
+     const [formData, setFormData] = useState({
+        nickname: "",
+        username: "",
+          password: "",
+     });
+
+      const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const {name, value} = e.target;
+
+        setFormData((prev) => ({
+            ...prev,
+            [name]: value,
+        }))
+     }
+
+         const handleSubmit = async(e: ChangeEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        try{
+             const result = await register(formData);
+             if(result.success) {
+                console.log("Register success", result.data);
+             }
+        } catch(_err) {
+            console.error("Error register", _err);
+        }
+     }
 
     const onShowPassoword = () => {
         setIsShowPassword(!isShowPassowrd);
     }
+
     return ( 
         <div className="flex w-full h-screen justify-center items-center bg-[#f8f6f1]">
             <div className="flex flex-col gap-7 max-w-105 w-full">
@@ -15,19 +45,19 @@ function Register() {
                     <p className="text-2xl font-medium text-[#1a1814]">Wellcome to SandBooks</p>
                     <p className="text-sm text-[#7a7368]">Đăng ký tài khoản mới.</p>
                 </div>
-                <form className="bg-white py-8 px-7 rounded-2xl shadow-sm flex flex-col gap-5 w-full">
+                <form className="bg-white py-8 px-7 rounded-2xl shadow-sm flex flex-col gap-5 w-full" onSubmit={handleSubmit}>
                     <div className="flex flex-col w-full gap-y-1">
                         <label className="text-sm text-[#1a1814] font-medium">Nickname</label>
-                        <input type="text" placeholder="Nhập nickname của bạn" className="border border-black/20 rounded-md py-2.5 px-3.5 text-sm w-full outline-0" />
+                        <input name="nickname" type="text" placeholder="Nhập nickname của bạn" className="border border-black/20 rounded-md py-2.5 px-3.5 text-sm w-full outline-0" onChange={handleChange}/>
                     </div>
                     <div className="flex flex-col w-full gap-y-1">
                         <label className="text-sm text-[#1a1814] font-medium">Username</label>
-                        <input type="text" placeholder="Username" className="border border-black/20 rounded-md py-2.5 px-3.5 text-sm w-full outline-0" />
+                        <input name="username" type="text" placeholder="Username" className="border border-black/20 rounded-md py-2.5 px-3.5 text-sm w-full outline-0" onChange={handleChange}/>
                     </div>
                     <div className="flex flex-col w-full gap-y-1">
                         <label className="text-sm text-[#1a1814] font-medium">Password</label>
                         <div className="flex border border-black/20 rounded-md py-2.5 px-3.5 text-sm w-full items-center">
-                            <input type={isShowPassowrd ? "text" : "password"} placeholder={isShowPassowrd ? "Nhập mật khẩu" : "********"} className="outline-0 w-full" />
+                            <input name="password" type={isShowPassowrd ? "text" : "password"} placeholder={isShowPassowrd ? "Nhập mật khẩu" : "********"} className="outline-0 w-full" onChange={handleChange}/>
                             <span className="opacity-80 cursor-pointer" onClick={onShowPassoword}>
                                 {isShowPassowrd ? <RiEyeLine size={18} /> : <RiEyeOffLine size={18} />}
                             </span>
