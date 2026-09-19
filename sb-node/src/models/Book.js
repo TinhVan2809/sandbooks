@@ -25,6 +25,8 @@ const normalizeBookRow = (row) => {
         }
       : null,
     thumbnailUrl: row.thumbnail_url || null,
+    rating: Number(row.rating || 0),
+    ratingCount: Number(row.rating_count || 0),
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   };
@@ -50,11 +52,21 @@ const getBaseSelect = () => `
     a.author_name,
     p.publisher_id,
     p.publisher_name,
-    thumb.image_url AS thumbnail_url
+    thumb.image_url AS thumbnail_url,
+    COALESCE(review_stats.rating, 0) AS rating,
+    COALESCE(review_stats.rating_count, 0) AS rating_count
   FROM books b
   LEFT JOIN authors a ON a.author_id = b.author_id
   LEFT JOIN publisher p ON p.publisher_id = b.publisher_id
   LEFT JOIN book_img thumb ON thumb.book_id = b.book_id AND thumb.is_thumbnail = 1
+  LEFT JOIN (
+    SELECT
+      book_id,
+      AVG(rating) AS rating,
+      COUNT(*) AS rating_count
+    FROM book_reviews
+    GROUP BY book_id
+  ) review_stats ON review_stats.book_id = b.book_id
 `;
 
 const buildListWhere = ({ search, authorId, publisherId, language }) => {
@@ -193,6 +205,16 @@ const findOrCreatePublisher = async (connection, publisherName) => {
   return result.insertId;
 };
 
+const normalizePublisherYear = (publisherYear) => {
+  if (!publisherYear) {
+    return null;
+  }
+
+  const year = String(publisherYear).trim();
+
+  return /^\d{4}$/.test(year) ? `${year}-01-01` : year;
+};
+
 const create = async ({
   title,
   isbn,
@@ -242,7 +264,7 @@ const create = async ({
         isbn.trim(),
         resolvedAuthorId,
         resolvedPublisherId,
-        publisherYear || null,
+        normalizePublisherYear(publisherYear),
         language ? language.trim() : null,
         description ? description.trim() : null,
       ],

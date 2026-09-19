@@ -1,15 +1,15 @@
 const API_BASE_URL = "http://localhost:8000/api";
 
-import { type LoginInput, type RegisterPayload, type ApiResponse } from "./type";
+import { type LoginInput, type RegisterPayload, type ApiResponse, type Book, type CatalogItem, type CreateBookPayload } from "./type";
 
 const request = async <T>(path: string, options: RequestInit): Promise<ApiResponse<T>> => {
+  const headers = options.body instanceof FormData
+    ? { ...options.headers }
+    : { "Content-Type": "application/json", ...options.headers };
   const response = await fetch(`${API_BASE_URL}${path}`, {
     ...options,
     credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-      ...options.headers,
-    },
+    headers,
   });
 
   const body = await response.json();
@@ -32,3 +32,24 @@ export const register = (payload: RegisterPayload) =>
     method: "POST",
     body: JSON.stringify(payload),
   });
+
+export const getAuthors = () => request<{ items: CatalogItem[] }>("/authors", { method: "GET" });
+
+export const getPublishers = () => request<{ items: CatalogItem[] }>("/publishers", { method: "GET" });
+
+export const createBook = (payload: CreateBookPayload, files: File[]) => {
+  const formData = new FormData();
+
+  Object.entries(payload).forEach(([key, value]) => {
+    if (value !== undefined) {
+      formData.append(key, String(value));
+    }
+  });
+
+  files.forEach((file) => formData.append("images", file));
+
+  return request<{ book: Book }>("/books", {
+    method: "POST",
+    body: formData,
+  });
+};

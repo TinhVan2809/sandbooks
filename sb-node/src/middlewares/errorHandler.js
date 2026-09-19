@@ -17,6 +17,14 @@ const normalizeError = (error) => {
     return new AppError(error.message, 403);
   }
 
+  if (error.name === "MulterError") {
+    if (error.code === "LIMIT_FILE_SIZE") {
+      return new AppError("Image file is too large", 413);
+    }
+
+    return new AppError("Invalid image upload", 422);
+  }
+
   return error;
 };
 

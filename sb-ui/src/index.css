@@ -4,3 +4,44 @@
 body {
   font-family: "Inter", sans-serif;
 }
+
+@layer components {
+  .field-label {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #302c26;
+  }
+
+  .field-input {
+    width: 100%;
+    border: 1px solid #ded9cf;
+    border-radius: 0.5rem;
+    background: #fff;
+    padding: 0.7rem 0.85rem;
+    font-size: 0.875rem;
+    color: #1a1814;
+    outline: none;
+    transition: border-color 150ms ease, box-shadow 150ms ease;
+  }
+
+  .field-input:focus {
+    border-color: #3a5740;
+    box-shadow: 0 0 0 3px rgb(58 87 64 / 12%);
+  }
+
+  .icon-button {
+    width: 2.65rem;
+    flex: 0 0 2.65rem;
+    border: 1px solid #ded9cf;
+    border-radius: 0.5rem;
+    color: #8b6b43;
+    font-size: 1.25rem;
+    line-height: 1;
+  }
+
+  .icon-button:hover {
+    background: #f8f6f1;
+  }
+}

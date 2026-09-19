@@ -22,3 +22,24 @@ export type ChangePasswordInput = {
   newPassword: string;
   confirmPassword: string;
 };
+
+export type CreateBookPayload = {
+  title: string;
+  isbn: string;
+  authorId?: number;
+  publisherId?: number;
+  publisherYear?: number;
+  language?: string;
+  description?: string;
+};
+
+export type CatalogItem = {
+  id: number;
+  name: string;
+};
+
+export type Book = {
+  id: number;
+  title: string;
+  isbn: string;
+};

@@ -1,6 +1,7 @@
 const AppError = require("../utils/AppError");
 
 const urlRegex = /^https?:\/\/[^\s]+$/i;
+const uploadedImagePathRegex = /^\/uploads\/books\/[a-z0-9-]+\.(jpg|jpeg|png|webp|gif)$/i;
 
 const failValidation = (errors) => {
   throw new AppError("Validation failed", 422, errors);
@@ -95,10 +96,14 @@ const validateCreateBook = (req, _res, next) => {
         errors.push({ field: "images", message: "Images must be an array" });
       } else {
         images.forEach((image, index) => {
-          if (!image || typeof image.url !== "string" || !urlRegex.test(image.url.trim())) {
+          if (
+            !image
+            || typeof image.url !== "string"
+            || (!urlRegex.test(image.url.trim()) && !uploadedImagePathRegex.test(image.url.trim()))
+          ) {
             errors.push({
               field: `images[${index}].url`,
-              message: "Image url must be a valid http(s) URL",
+              message: "Image url must be a valid http(s) URL or uploaded image path",
             });
           }
         });

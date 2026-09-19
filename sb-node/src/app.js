@@ -6,6 +6,7 @@ const config = require("./config/env");
 const { checkDatabaseConnection } = require("./config/database");
 const authRoutes = require("./routes/authRoutes");
 const bookRoutes = require("./routes/bookRoutes");
+const catalogRoutes = require("./routes/catalogRoutes");
 const { errorHandler, notFoundHandler } = require("./middlewares/errorHandler");
 
 const buildAllowedOrigins = () => [
@@ -76,6 +77,7 @@ const createApp = () => {
 
   app.use("/api/auth", authRoutes);
   app.use("/api/books", bookRoutes);
+  app.use("/api", catalogRoutes);
 
   app.use(notFoundHandler);
   app.use(errorHandler);
