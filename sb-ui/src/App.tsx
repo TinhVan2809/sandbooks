@@ -4,6 +4,8 @@ import Login from "./pages/auth/Login"
 import UserLayout from "./layout/UserLayout"
 import Profile from "./pages/users/Profile"
 import Register from "./pages/auth/Register"
+import AdminLayout from "./layout/AdminLayout"
+import Dashboard from "./pages/admin/Dashboard"
 function App() {
 
   const router = createBrowserRouter([
@@ -13,6 +15,13 @@ function App() {
       children: [
         { index: true, element: <Home /> },
         { path: "/profile", element: <Profile /> },
+      ],
+    },
+    {
+      path: "/dashboard",
+      element: <AdminLayout />,
+      children: [
+        {index: true, element: <Dashboard />},
       ],
     },
     {

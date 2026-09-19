@@ -26,7 +26,11 @@ function Login() {
         try {
             const result = await login(formData);
             if (result.success) {
-                navigate("/");
+               if(result.data.user.role === "user") {
+                 navigate("/");
+               } else {
+                navigate("/dashboard")
+               }
             }
         } catch (_err) {
             console.error("error login", _err);

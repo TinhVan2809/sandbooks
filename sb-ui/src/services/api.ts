@@ -22,7 +22,7 @@ const request = async <T>(path: string, options: RequestInit): Promise<ApiRespon
 };
 
 export const login = (payload: LoginInput) =>
-  request<{ user: { id: number; nickname: string; username: string } }>("/auth/login", {
+  request<{ user: { id: number; nickname: string; username: string; role: string } }>("/auth/login", {
     method: "POST",
     body: JSON.stringify(payload),
   });
