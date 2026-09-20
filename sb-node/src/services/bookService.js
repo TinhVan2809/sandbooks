@@ -21,6 +21,7 @@ const listBooks = async (query) => {
     authorId: query.authorId ? toPositiveInteger(query.authorId, null) : null,
     publisherId: query.publisherId ? toPositiveInteger(query.publisherId, null) : null,
     language: query.language ? query.language.trim() : "",
+    categoryId: query.categoryId ? toPositiveInteger(query.categoryId, null) : null,
   };
 
   const [items, total] = await Promise.all([Book.findMany(filters), Book.countMany(filters)]);
@@ -55,7 +56,28 @@ const createBook = async (payload) => {
   }
 };
 
+const getMostReviewedBooks = async (query) => {
+  const limit = toPositiveInteger(query.limit, 8, 50);
+
+  return Book.findMostReviewed(limit);
+};
+
+const getNewestBooks = async (query) => {
+  const limit = toPositiveInteger(query.limit, 10, 50);
+
+  return Book.findNewest(limit);
+};
+
+const getRecommendedBooks = async (query) => {
+  const limit = toPositiveInteger(query.limit, 10, 50);
+
+  return Book.findRecommended(limit);
+};
+
 module.exports = {
   listBooks,
   createBook,
+  getMostReviewedBooks,
+  getNewestBooks,
+  getRecommendedBooks,
 };

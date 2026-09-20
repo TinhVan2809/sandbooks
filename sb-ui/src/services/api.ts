@@ -1,5 +1,7 @@
 const API_BASE_URL = "http://localhost:8000/api";
 
+export const API_IMG_URL = "http://localhost:8000";
+
 import { type LoginInput, type RegisterPayload, type ApiResponse, type Book, type CatalogItem, type CreateBookPayload } from "./type";
 
 const request = async <T>(path: string, options: RequestInit): Promise<ApiResponse<T>> => {
@@ -61,3 +63,13 @@ export const createBook = (payload: CreateBookPayload, files: File[]) => {
     body: formData,
   });
 };
+
+
+export const getMostReviewedBooks = () =>
+  request<{ items: Book[] }>("/books/most-reviewed", { method: "GET" });
+
+export const getNewestBooks = () =>
+  request<{ items: Book[] }>("/books/newest", { method: "GET" });
+
+export const getRecommendedBooks = () =>
+  request<{ items: Book[] }>("/books/recommended", { method: "GET" });

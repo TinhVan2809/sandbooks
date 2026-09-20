@@ -42,4 +42,16 @@ export type Book = {
   id: number;
   title: string;
   isbn: string;
+  publisherYear: string | null;
+  language: string | null;
+  description: string | null;
+  status: string;
+  author: { id: number; name: string } | null;
+  publisher: { id: number; name: string } | null;
+  category: { id: number; name: string } | null;
+  thumbnailUrl: string | null;
+  rating: number;
+  ratingCount: number;
+  createdAt: string | null;
+  updatedAt: string | null;
 };

@@ -22,7 +22,37 @@ const createBook = asyncHandler(async (req, res) => {
   });
 });
 
+const getMostReviewedBooks = asyncHandler(async (req, res) => {
+  const items = await bookService.getMostReviewedBooks(req.query);
+
+  res.status(200).json({
+    success: true,
+    data: { items },
+  });
+});
+
+const getNewestBooks = asyncHandler(async (req, res) => {
+  const items = await bookService.getNewestBooks(req.query);
+
+  res.status(200).json({
+    success: true,
+    data: { items },
+  });
+});
+
+const getRecommendedBooks = asyncHandler(async (req, res) => {
+  const items = await bookService.getRecommendedBooks(req.query);
+
+  res.status(200).json({
+    success: true,
+    data: { items },
+  });
+});
+
 module.exports = {
   listBooks,
   createBook,
+  getMostReviewedBooks,
+  getNewestBooks,
+  getRecommendedBooks,
 };

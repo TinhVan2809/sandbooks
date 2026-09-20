@@ -12,17 +12,24 @@ const normalizeBookRow = (row) => {
     publisherYear: row.publisher_year,
     language: row.language,
     description: row.description,
+    status: row.status,
     author: row.author_id
       ? {
-          id: row.author_id,
-          name: row.author_name,
-        }
+        id: row.author_id,
+        name: row.author_name,
+      }
       : null,
     publisher: row.publisher_id
       ? {
-          id: row.publisher_id,
-          name: row.publisher_name,
-        }
+        id: row.publisher_id,
+        name: row.publisher_name,
+      }
+      : null,
+    category: row.category_id
+      ? {
+        id: row.category_id,
+        name: row.category_name,
+      }
       : null,
     thumbnailUrl: row.thumbnail_url || null,
     rating: Number(row.rating || 0),
@@ -46,18 +53,23 @@ const getBaseSelect = () => `
     b.publisher_year,
     b.language,
     b.description,
+    b.status,
     NULL AS created_at,
     NULL AS updated_at,
     a.author_id,
     a.author_name,
     p.publisher_id,
     p.publisher_name,
+    c.category_id,
+    c.category_name,
     thumb.image_url AS thumbnail_url,
     COALESCE(review_stats.rating, 0) AS rating,
     COALESCE(review_stats.rating_count, 0) AS rating_count
   FROM books b
   LEFT JOIN authors a ON a.author_id = b.author_id
   LEFT JOIN publisher p ON p.publisher_id = b.publisher_id
+  LEFT JOIN book_categories bc ON bc.book_id = b.book_id
+  LEFT JOIN categories c ON c.category_id = bc.category_id
   LEFT JOIN book_img thumb ON thumb.book_id = b.book_id AND thumb.is_thumbnail = 1
   LEFT JOIN (
     SELECT
@@ -69,7 +81,7 @@ const getBaseSelect = () => `
   ) review_stats ON review_stats.book_id = b.book_id
 `;
 
-const buildListWhere = ({ search, authorId, publisherId, language }) => {
+const buildListWhere = ({ search, authorId, publisherId, language, categoryId }) => {
   const clauses = [];
   const params = [];
 
@@ -94,15 +106,20 @@ const buildListWhere = ({ search, authorId, publisherId, language }) => {
     params.push(language);
   }
 
+  if (categoryId) {
+    clauses.push("bc.category_id = ?");
+    params.push(categoryId);
+  }
+
   return {
     whereSql: clauses.length ? `WHERE ${clauses.join(" AND ")}` : "",
     params,
   };
 };
 
-const findMany = async ({ page, limit, search, authorId, publisherId, language }) => {
+const findMany = async ({ page, limit, search, authorId, publisherId, language, categoryId }) => {
   const offset = (page - 1) * limit;
-  const { whereSql, params } = buildListWhere({ search, authorId, publisherId, language });
+  const { whereSql, params } = buildListWhere({ search, authorId, publisherId, language, categoryId });
   const rows = await db.query(
     `${getBaseSelect()}
      ${whereSql}
@@ -114,13 +131,58 @@ const findMany = async ({ page, limit, search, authorId, publisherId, language }
   return rows.map(normalizeBookRow);
 };
 
-const countMany = async ({ search, authorId, publisherId, language }) => {
-  const { whereSql, params } = buildListWhere({ search, authorId, publisherId, language });
+/**
+ * Sách có nhiều đánh giá nhất (sắp xếp theo số lượng review DESC)
+ */
+const findMostReviewed = async (limit = 10) => {
+  const rows = await db.query(
+    `${getBaseSelect()}
+     WHERE review_stats.rating_count > 0
+     ORDER BY review_stats.rating_count DESC, review_stats.rating DESC
+     LIMIT ?`,
+    [limit],
+  );
+
+  return rows.map(normalizeBookRow);
+};
+
+/**
+ * Sách mới nhất (sắp xếp theo ngày tạo DESC)
+ */
+const findNewest = async (limit = 10) => {
+  const rows = await db.query(
+    `${getBaseSelect()}
+     ORDER BY b.created_at DESC
+     LIMIT ?`,
+    [limit],
+  );
+
+  return rows.map(normalizeBookRow);
+};
+
+/**
+ * Sách được đề xuất (rating cao, ít nhất 1 review, sắp xếp theo rating DESC)
+ */
+const findRecommended = async (limit = 10) => {
+  const rows = await db.query(
+    `${getBaseSelect()}
+     WHERE review_stats.rating_count > 0
+     ORDER BY review_stats.rating DESC, review_stats.rating_count DESC
+     LIMIT ?`,
+    [limit],
+  );
+
+  return rows.map(normalizeBookRow);
+};
+
+const countMany = async ({ search, authorId, publisherId, language, categoryId }) => {
+  const { whereSql, params } = buildListWhere({ search, authorId, publisherId, language, categoryId });
   const rows = await db.query(
     `SELECT COUNT(*) AS total
      FROM books b
      LEFT JOIN authors a ON a.author_id = b.author_id
      LEFT JOIN publisher p ON p.publisher_id = b.publisher_id
+     LEFT JOIN book_categories bc ON bc.book_id = b.book_id
      ${whereSql}`,
     params,
   );
@@ -288,5 +350,8 @@ module.exports = {
   findMany,
   countMany,
   findById,
+  findMostReviewed,
+  findNewest,
+  findRecommended,
   create,
 };

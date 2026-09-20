@@ -1,7 +1,7 @@
 function Dashboard() {
-    return ( 
+    return (
         <div className="">Trang dashboard</div>
-     );
+    );
 }
 
 export default Dashboard;
