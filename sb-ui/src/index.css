@@ -6,7 +6,35 @@ body {
 }
 
 .font-display {
-    font-family: 'Instrument Serif', Georgia, serif;
+  font-family: 'Instrument Serif', Georgia, serif;
+}
+
+.text-foreground {
+  color: #18181a;
+}
+
+.text-muted-foreground {
+  color: #6b7568;
+}
+
+.border-border {
+  border-color: #e3e7df;
+}
+
+.text-accent {
+  color: #97bc62;
+}
+
+.bg-secondary {
+  background-color: #eef3ea;
+}
+
+.bg-card {
+  background-color: #ffffff;
+}
+
+.bg-primary {
+  background-color: #2c5f2d;
 }
 
 @layer components {

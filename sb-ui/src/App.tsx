@@ -7,6 +7,7 @@ import Register from "./pages/auth/Register"
 import AdminLayout from "./layout/AdminLayout"
 import Dashboard from "./pages/admin/Dashboard"
 import CreateBook from "./pages/admin/CreateBook"
+import Discover from "./pages/users/Discover"
 function App() {
 
   const router = createBrowserRouter([
@@ -16,20 +17,21 @@ function App() {
       children: [
         { index: true, element: <Home /> },
         { path: "/profile", element: <Profile /> },
+        { path: "/discovery", element: <Discover /> },
       ],
     },
     {
       path: "/admin",
       element: <AdminLayout />,
       children: [
-        {index: true, element: <Dashboard />},
-        {path: "books/create", element: <CreateBook />},
+        { index: true, element: <Dashboard /> },
+        { path: "books/create", element: <CreateBook /> },
       ],
     },
     {
       path: "/login",
       children: [
-        {index: true, element: <Login />},
+        { index: true, element: <Login /> },
       ]
     },
     {

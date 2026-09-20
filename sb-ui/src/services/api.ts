@@ -64,6 +64,8 @@ export const createBook = (payload: CreateBookPayload, files: File[]) => {
   });
 };
 
+export const getListBooks = () =>
+  request<{ items: Book[], pagination?: { total: number, page: number, totalPages: number } }>("/books", { method: "GET" });
 
 export const getMostReviewedBooks = () =>
   request<{ items: Book[] }>("/books/most-reviewed", { method: "GET" });
