@@ -42,10 +42,12 @@ export const logout = () =>
   });
 
 
-// [Books]
+
 export const getAuthors = () => request<{ items: CatalogItem[] }>("/authors", { method: "GET" });
 
 export const getPublishers = () => request<{ items: CatalogItem[] }>("/publishers", { method: "GET" });
+
+export const getCategories = () => request<{ items: CatalogItem[] }>("/categories", { method: "GET" });
 
 export const createBook = (payload: CreateBookPayload, files: File[]) => {
   const formData = new FormData();
@@ -64,6 +66,7 @@ export const createBook = (payload: CreateBookPayload, files: File[]) => {
   });
 };
 
+// [Books]
 export const getListBooks = () =>
   request<{ items: Book[], pagination?: { total: number, page: number, totalPages: number } }>("/books", { method: "GET" });
 

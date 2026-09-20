@@ -3,6 +3,8 @@ const AppError = require("../utils/AppError");
 const Author = require("../models/Author");
 const Publisher = require("../models/Publisher");
 
+const Category = require("../models/Category");
+
 const validateName = (value) => {
   if (typeof value !== "string" || !value.trim() || value.trim().length > 255) {
     throw new AppError("Name is required and must be at most 255 characters", 422);
@@ -29,4 +31,8 @@ const createPublisher = asyncHandler(async (req, res) => {
   res.status(201).json({ success: true, message: "Publisher created successfully", data: { publisher } });
 });
 
-module.exports = { listAuthors, createAuthor, listPublishers, createPublisher };
+const listCategories = asyncHandler(async (_req, res) => {
+  res.status(200).json({ success: true, data: { items: await Category.findMany() } });
+});
+
+module.exports = { listAuthors, createAuthor, listPublishers, createPublisher, listCategories };

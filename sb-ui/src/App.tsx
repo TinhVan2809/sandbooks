@@ -8,6 +8,7 @@ import AdminLayout from "./layout/AdminLayout"
 import Dashboard from "./pages/admin/Dashboard"
 import CreateBook from "./pages/admin/CreateBook"
 import Discover from "./pages/users/Discover"
+import Categories from "./pages/users/Caterories"
 function App() {
 
   const router = createBrowserRouter([
@@ -18,6 +19,7 @@ function App() {
         { index: true, element: <Home /> },
         { path: "/profile", element: <Profile /> },
         { path: "/discovery", element: <Discover /> },
+        { path: "/categories", element: <Categories /> },
       ],
     },
     {
