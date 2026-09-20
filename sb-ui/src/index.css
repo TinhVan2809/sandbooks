@@ -5,6 +5,10 @@ body {
   font-family: "Inter", sans-serif;
 }
 
+.font-display {
+    font-family: 'Instrument Serif', Georgia, serif;
+}
+
 @layer components {
   .field-label {
     display: block;

@@ -21,6 +21,7 @@ const request = async <T>(path: string, options: RequestInit): Promise<ApiRespon
   return body as ApiResponse<T>;
 };
 
+// [Auth]
 export const login = (payload: LoginInput) =>
   request<{ user: { id: number; nickname: string; username: string; role: string } }>("/auth/login", {
     method: "POST",
@@ -33,6 +34,13 @@ export const register = (payload: RegisterPayload) =>
     body: JSON.stringify(payload),
   });
 
+export const logout = () =>
+  request<null>("/auth/logout", {
+    method: "POST",
+  });
+
+
+// [Books]
 export const getAuthors = () => request<{ items: CatalogItem[] }>("/authors", { method: "GET" });
 
 export const getPublishers = () => request<{ items: CatalogItem[] }>("/publishers", { method: "GET" });
