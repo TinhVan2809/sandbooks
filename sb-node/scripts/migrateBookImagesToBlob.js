@@ -64,11 +64,23 @@ const migrate = async () => {
 
     const extension = path.extname(localPath).toLowerCase();
     const fileBuffer = await fs.readFile(localPath);
-    const blob = await put(`books/${path.basename(localPath)}`, fileBuffer, {
-      access: "public",
-      contentType: mimeTypes[extension] || "application/octet-stream",
-      addRandomSuffix: false,
-    });
+    let blob;
+
+    try {
+      blob = await put(`books/${path.basename(localPath)}`, fileBuffer, {
+        access: "public",
+        contentType: mimeTypes[extension] || "application/octet-stream",
+        addRandomSuffix: false,
+      });
+    } catch (uploadError) {
+      if (uploadError.message?.includes("private store")) {
+        throw new Error(
+          "The BLOB_READ_WRITE_TOKEN belongs to a private store. Create/use a public Blob Store for book images, then replace the token.",
+        );
+      }
+
+      throw uploadError;
+    }
 
     await db.execute(
       "UPDATE book_img SET image_url = ? WHERE img_id = ?",
