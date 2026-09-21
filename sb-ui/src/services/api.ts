@@ -1,6 +1,6 @@
-const API_BASE_URL = "https://sandbooks-api.vercel.app/api";
+const API_BASE_URL = import.meta.env.PROD ? "https://sandbooks-api.vercel.app/api" : "http://localhost:8000/api";
 
-export const API_IMG_URL = "https://sandbooks-api.vercel.app";
+export const API_IMG_URL = import.meta.env.PROD ? "https://sandbooks-api.vercel.app" : "http://localhost:8000";
 
 export const getImageUrl = (imageUrl: string | null | undefined) => {
   if (!imageUrl) {
@@ -111,3 +111,6 @@ export const getNewestBooks = () =>
 
 export const getRecommendedBooks = () =>
   request<{ items: Book[] }>("/books/recommended", { method: "GET" });
+
+export const getBookById = (bookId: number) =>
+  request<{ book: Book }>(`/books/${bookId}`, { method: "GET" });

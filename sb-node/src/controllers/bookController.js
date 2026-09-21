@@ -10,6 +10,23 @@ const listBooks = asyncHandler(async (req, res) => {
   });
 });
 
+const getBookById = asyncHandler(async (req, res) => {
+  const bookId = parseInt(req.params.id, 10);
+  if (isNaN(bookId)) {
+    return res.status(400).json({ success: false, message: "Invalid book ID" });
+  }
+
+  const book = await bookService.getBookById(bookId);
+  if (!book) {
+    return res.status(404).json({ success: false, message: "Book not found" });
+  }
+
+  res.status(200).json({
+    success: true,
+    data: { book },
+  });
+});
+
 const createBook = asyncHandler(async (req, res) => {
   const book = await bookService.createBook(req.body);
 
@@ -72,6 +89,7 @@ const getSavedBooks = asyncHandler(async (req, res) => {
 
 module.exports = {
   listBooks,
+  getBookById,
   createBook,
   getMostReviewedBooks,
   getNewestBooks,

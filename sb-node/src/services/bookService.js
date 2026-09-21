@@ -56,6 +56,16 @@ const createBook = async (payload) => {
   }
 };
 
+const getBookById = async (bookId) => {
+  const parsedBookId = toPositiveInteger(bookId, null);
+
+  if (!parsedBookId) {
+    throw new AppError("Invalid book ID", 400);
+  }
+
+  return Book.findById(parsedBookId);
+};
+
 const getMostReviewedBooks = async (query) => {
   const limit = toPositiveInteger(query.limit, 8, 50);
 
@@ -94,6 +104,7 @@ const getSavedBooks = async (userId) => {
 
 module.exports = {
   listBooks,
+  getBookById,
   createBook,
   getMostReviewedBooks,
   getNewestBooks,

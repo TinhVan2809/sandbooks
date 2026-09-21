@@ -41,6 +41,14 @@ body {
   color: #2c5f2d;
 }
 
+.border-primary {
+  border-color: #2c5f2d;
+}
+
+.bg-pine {
+  background-color: #1a3a1b;
+}
+
 @layer components {
   .field-label {
     display: block;
