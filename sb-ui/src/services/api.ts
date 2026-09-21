@@ -2,6 +2,14 @@ const API_BASE_URL = "https://sandbooks-api.vercel.app/api";
 
 export const API_IMG_URL = "https://sandbooks-api.vercel.app";
 
+export const getImageUrl = (imageUrl: string | null | undefined) => {
+  if (!imageUrl) {
+    return "/placeholder.jpg";
+  }
+
+  return imageUrl.startsWith("http") ? imageUrl : `${API_IMG_URL}${imageUrl}`;
+};
+
 import { type LoginInput, type RegisterPayload, type ApiResponse, type AuthUser, type Book, type CatalogItem, type Category, type CreateBookPayload } from "./type";
 
 class ApiError extends Error {

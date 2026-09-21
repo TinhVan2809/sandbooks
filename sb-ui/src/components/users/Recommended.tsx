@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getRecommendedBooks, API_IMG_URL, getNewestBooks } from "../../services/api";
+import { getRecommendedBooks, getImageUrl, getNewestBooks } from "../../services/api";
 import { RiStarFill, RiArrowLeftSLine, RiArrowRightSLine } from "@remixicon/react";
 import { Link } from "react-router-dom";
 import { type Book } from "../../services/type";
@@ -16,7 +16,7 @@ function Card({ card }: { card: Book[] }) {
                                 <div className="flex h-full cursor-pointer flex-col overflow-hidden rounded-lg border border-[#e3e7df] bg-white transition-all hover:border-[#98bd63] hover:shadow-sm">
                                     <div className="aspect-2/3 bg-gray-100 overflow-hidden relative">
                                         <img
-                                            src={r.thumbnailUrl ? `${API_IMG_URL}${r.thumbnailUrl}` : "/placeholder.jpg"}
+                                            src={getImageUrl(r.thumbnailUrl)}
                                             alt={r.title}
                                             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                                         />

@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { RiStarFill, RiStarHalfFill } from "@remixicon/react";
-import { API_IMG_URL } from "../../services/api";
+import { getImageUrl } from "../../services/api";
 import { type Book } from "../../services/type";
 import SaveBookButton from "./SaveBookButton";
 
@@ -49,7 +49,7 @@ function BookCard({ mostReviewedBooks, books }: BookCardProps) {
                     {/* Thumbnail */}
                     <div className="aspect-3/4 w-full overflow-hidden bg-gray-100 relative">
                         <img
-                            src={book.thumbnailUrl ? `${API_IMG_URL}${book.thumbnailUrl}` : "/placeholder.jpg"}
+                            src={getImageUrl(book.thumbnailUrl)}
                             alt={book.title}
                             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                         />

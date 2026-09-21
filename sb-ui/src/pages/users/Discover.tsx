@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import Search from "../../components/users/Search";
-import { getListBooks } from "../../services/api";
+import { getListBooks, getImageUrl } from "../../services/api";
 import { type Book } from "../../services/type";
 import { RiLayoutGridLine, RiListUnordered, RiStarFill, RiBookmarkLine } from "@remixicon/react";
-import { API_IMG_URL } from "../../services/api";
 
 function BookCardDiscoverMenu({ book }: { book: Book[] }) {
     return (
@@ -13,7 +12,7 @@ function BookCardDiscoverMenu({ book }: { book: Book[] }) {
                     {book.map((b) => (
                         <div className="group bg-card border border-border rounded overflow-hidden hover:border-primary/30 hover:shadow-sm transition-all cursor-pointer" key={b.id}>
                             <div className="aspect-2/3 bg-secondary overlow-hidden relative">
-                                <img src={b.thumbnailUrl ? `${API_IMG_URL}${b.thumbnailUrl}` : "/placeholder.jpg"} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                                <img src={getImageUrl(b.thumbnailUrl)} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                                 <button className="absolute top-2 right-2 w-7 h-7 rounded flex items-center justify-center bg-white/90 backdrop-blur-sm transition-all opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-primary"><RiBookmarkLine size={15} /></button>
                             </div>
                             <div className="p-3">
@@ -45,7 +44,7 @@ function BookCardDiscoverMenuList({ book }: { book: Book[] }) {
                             {/* Thumbnail */}
                             <div className="w-12 sm:w-16 h-16 sm:h-24 shrink-0 mr-4 rounded overflow-hidden shadow-sm border border-border">
                                 <img 
-                                    src={b.thumbnailUrl ? `${API_IMG_URL}${b.thumbnailUrl}` : "/placeholder.jpg"} 
+                                    src={getImageUrl(b.thumbnailUrl)} 
                                     alt={b.title}
                                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
                                 />
