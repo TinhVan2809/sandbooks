@@ -14,6 +14,7 @@ const buildAllowedOrigins = () => [
   config.app.frontendUrl,
   "http://localhost:5173",
   "http://localhost:3000",
+  "https://sandbooks-two.vercel.app"
 ].filter(Boolean);
 
 const createCorsOptions = () => {

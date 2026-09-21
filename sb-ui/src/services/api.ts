@@ -1,6 +1,6 @@
-const API_BASE_URL = "http://localhost:8000/api";
+const API_BASE_URL = "https://sandbooks-api.vercel.app/api";
 
-export const API_IMG_URL = "http://localhost:8000";
+export const API_IMG_URL = "https://sandbooks-api.vercel.app";
 
 import { type LoginInput, type RegisterPayload, type ApiResponse, type AuthUser, type Book, type CatalogItem, type Category, type CreateBookPayload } from "./type";
 
