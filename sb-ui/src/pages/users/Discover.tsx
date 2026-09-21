@@ -12,7 +12,7 @@ function BookCardDiscoverMenu({ book }: { book: Book[] }) {
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 lg:gap-5">
                     {book.map((b) => (
                         <div className="group bg-card border border-border rounded overflow-hidden hover:border-primary/30 hover:shadow-sm transition-all cursor-pointer" key={b.id}>
-                            <div className="aspect-[2/3] bg-secondary overlow-hidden relative">
+                            <div className="aspect-2/3 bg-secondary overlow-hidden relative">
                                 <img src={b.thumbnailUrl ? `${API_IMG_URL}${b.thumbnailUrl}` : "/placeholder.jpg"} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                                 <button className="absolute top-2 right-2 w-7 h-7 rounded flex items-center justify-center bg-white/90 backdrop-blur-sm transition-all opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-primary"><RiBookmarkLine size={15} /></button>
                             </div>

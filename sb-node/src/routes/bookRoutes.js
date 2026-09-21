@@ -11,6 +11,10 @@ router.get("/", validateListBooks, bookController.listBooks);
 router.get("/most-reviewed", bookController.getMostReviewedBooks);
 router.get("/newest", bookController.getNewestBooks);
 router.get("/recommended", bookController.getRecommendedBooks);
+router.get("/saved/:id", authMiddleware, bookController.getSavedBooks);
+router.post("/:id/save", authMiddleware, bookController.saveBook);
+router.delete("/:id/save", authMiddleware, bookController.unsaveBook);
+
 router.post(
 	"/",
 	authMiddleware,

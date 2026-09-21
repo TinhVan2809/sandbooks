@@ -9,6 +9,7 @@ import Dashboard from "./pages/admin/Dashboard"
 import CreateBook from "./pages/admin/CreateBook"
 import Discover from "./pages/users/Discover"
 import Categories from "./pages/users/Caterories"
+import MyLybrary from "./pages/users/MyLibrary"
 function App() {
 
   const router = createBrowserRouter([
@@ -20,6 +21,7 @@ function App() {
         { path: "/profile", element: <Profile /> },
         { path: "/discovery", element: <Discover /> },
         { path: "/categories", element: <Categories /> },
+        { path: "/my-library", element: <MyLybrary /> },
       ],
     },
     {

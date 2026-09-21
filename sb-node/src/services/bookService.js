@@ -74,10 +74,31 @@ const getRecommendedBooks = async (query) => {
   return Book.findRecommended(limit);
 };
 
+const saveBook = async (userId, bookId) => {
+  const parsedBookId = toPositiveInteger(bookId, null);
+  if (!parsedBookId) throw new AppError("Invalid book ID", 400);
+  return Book.saveBook(userId, parsedBookId);
+};
+
+const unsaveBook = async (userId, bookId) => {
+  const parsedBookId = toPositiveInteger(bookId, null);
+  if (!parsedBookId) throw new AppError("Invalid book ID", 400);
+  return Book.unsaveBook(userId, parsedBookId);
+};
+
+const getSavedBooks = async (userId) => {
+  const parsedUserId = toPositiveInteger(userId, null);
+  if (!parsedUserId) throw new AppError("Invalid user ID", 400);
+  return Book.findSavedBooks(parsedUserId);
+};
+
 module.exports = {
   listBooks,
   createBook,
   getMostReviewedBooks,
   getNewestBooks,
   getRecommendedBooks,
+  saveBook,
+  unsaveBook,
+  getSavedBooks,
 };

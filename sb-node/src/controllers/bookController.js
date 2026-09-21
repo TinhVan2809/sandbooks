@@ -49,10 +49,34 @@ const getRecommendedBooks = asyncHandler(async (req, res) => {
   });
 });
 
+const saveBook = asyncHandler(async (req, res) => {
+  const userId = req.user.id;
+  const { id: bookId } = req.params;
+  await bookService.saveBook(userId, bookId);
+  res.status(200).json({ success: true, message: "Book saved successfully" });
+});
+
+const unsaveBook = asyncHandler(async (req, res) => {
+  const userId = req.user.id;
+  const { id: bookId } = req.params;
+  await bookService.unsaveBook(userId, bookId);
+  res.status(200).json({ success: true, message: "Book unsaved successfully" });
+});
+
+const getSavedBooks = asyncHandler(async (req, res) => {
+  // Get from req.params to allow fetching any user's saved books (if authorized, but for now we'll just fetch based on params)
+  const { id: userId } = req.params;
+  const items = await bookService.getSavedBooks(userId);
+  res.status(200).json({ success: true, data: { items } });
+});
+
 module.exports = {
   listBooks,
   createBook,
   getMostReviewedBooks,
   getNewestBooks,
   getRecommendedBooks,
+  saveBook,
+  unsaveBook,
+  getSavedBooks,
 };

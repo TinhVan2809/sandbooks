@@ -2,11 +2,12 @@ import { RiEyeLine, RiEyeOffLine } from "@remixicon/react";
 import { useState, type ChangeEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
-import { login } from "../../services/api";
+import { useAuth } from "../../contexts/useAuth";
 function Login() {
 
     const [isShowPassowrd, setIsShowPassword] = useState(false);
     const navigate = useNavigate();
+    const { login } = useAuth();
 
     const [formData, setFormData] = useState({
         username: "",
@@ -24,13 +25,11 @@ function Login() {
     const handleSubmit = async (e: ChangeEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-            const result = await login(formData);
-            if (result.success) {
-               if(result.data.user.role === "user") {
+                        const user = await login(formData);
+                        if (user.role === "user") {
                  navigate("/");
-               } else {
+                        } else {
                 navigate("/admin")
-               }
             }
         } catch (_err) {
             console.error("error login", _err);

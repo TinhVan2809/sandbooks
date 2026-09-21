@@ -346,6 +346,33 @@ const create = async ({
   return findById(bookId);
 };
 
+const saveBook = async (userId, bookId) => {
+  await db.execute(
+    "INSERT IGNORE INTO book_save (user_id, book_id) VALUES (?, ?)",
+    [userId, bookId]
+  );
+  return true;
+};
+
+const unsaveBook = async (userId, bookId) => {
+  await db.execute(
+    "DELETE FROM book_save WHERE user_id = ? AND book_id = ?",
+    [userId, bookId]
+  );
+  return true;
+};
+
+const findSavedBooks = async (userId) => {
+  const rows = await db.query(
+    `${getBaseSelect()}
+     INNER JOIN book_save bs ON bs.book_id = b.book_id
+     WHERE bs.user_id = ?
+     ORDER BY bs.created_at DESC`,
+    [userId]
+  );
+  return rows.map(normalizeBookRow);
+};
+
 module.exports = {
   findMany,
   countMany,
@@ -354,4 +381,7 @@ module.exports = {
   findNewest,
   findRecommended,
   create,
+  saveBook,
+  unsaveBook,
+  findSavedBooks,
 };

@@ -1,16 +1,17 @@
 import { NavLink } from "react-router-dom";
 import {
     RiSearchLine, RiNotification4Line,
-    RiBookmarkLine, RiMenuLine, RiCloseLine
+    RiBookmarkLine, RiMenuLine, RiCloseLine, RiUserLine
 } from "@remixicon/react";
 import { useState } from "react";
+import { useAuth } from "../../contexts/useAuth";
 
 function Header() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const { user } = useAuth();
 
     const mobileNavClassName = ({ isActive }: { isActive: boolean }) =>
-        `block w-full rounded-lg px-3 py-2.5 text-left text-sm font-medium transition-colors ${
-            isActive ? "bg-[#e8f0e6] text-[#2c5f2d]" : "text-[#6B5768] hover:bg-[#f8f8f6] hover:text-[#2c5f2d]"
+        `block w-full rounded-lg px-3 py-2.5 text-left text-sm font-medium transition-colors ${isActive ? "bg-[#e8f0e6] text-[#2c5f2d]" : "text-[#6B5768] hover:bg-[#f8f8f6] hover:text-[#2c5f2d]"
         }`;
 
     return (
@@ -33,6 +34,7 @@ function Header() {
                         <button className="p-2 rounded hover:bg-[#f8f8f6]"><RiSearchLine size={20} className="text-[#6B5768] hover:text-[#18181a]" /></button>
                         <button className="p-2 rounded hover:bg-[#f8f8f6]"><RiNotification4Line size={20} className="text-[#6B5768] hover:text-[#18181a]" /></button>
                         <button className="p-2 rounded hover:bg-[#f8f8f6]"><RiBookmarkLine size={20} className="text-[#6B5768] hover:text-[#18181a]" /></button>
+                        <NavLink to={user ? "/profile" : "/login"} aria-label={user ? "Mở hồ sơ" : "Đăng nhập"} className="rounded-full border bg-primary p-1 text-white"><RiUserLine size={20} /></NavLink>
                     </div>
                     <button
                         type="button"

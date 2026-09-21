@@ -21,7 +21,7 @@ SET @@SESSION.SQL_LOG_BIN= 0;
 -- GTID state at the beginning of the backup 
 --
 
-SET @@GLOBAL.GTID_PURGED=/*!80000 '+'*/ '67033207-b235-11f1-9728-e25f16c19f40:1-66,
+SET @@GLOBAL.GTID_PURGED=/*!80000 '+'*/ '67033207-b235-11f1-9728-e25f16c19f40:1-82,
 cd0380f4-b10d-11f1-b029-8ee1962aa857:1-194';
 
 --
@@ -68,7 +68,7 @@ CREATE TABLE `authors` (
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`author_id`),
   UNIQUE KEY `authors_author_name_unique` (`author_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -77,7 +77,7 @@ CREATE TABLE `authors` (
 
 LOCK TABLES `authors` WRITE;
 /*!40000 ALTER TABLE `authors` DISABLE KEYS */;
-INSERT INTO `authors` VALUES (1,'Yuval Noah Harari','2026-09-19 23:10:33','2026-09-19 23:10:33'),(2,'Daniel Kahneman','2026-09-19 23:46:33','2026-09-19 23:46:33'),(3,'Patrick Rothfuss','2026-09-19 23:46:33','2026-09-19 23:46:33');
+INSERT INTO `authors` VALUES (1,'Yuval Noah Harari','2026-09-19 23:10:33','2026-09-19 23:10:33'),(2,'Daniel Kahneman','2026-09-19 23:46:33','2026-09-19 23:46:33'),(3,'Patrick Rothfuss','2026-09-19 23:46:33','2026-09-19 23:46:33'),(4,'James Clear','2026-09-20 04:26:04','2026-09-20 04:26:04'),(5,'Peter Thiel','2026-09-20 04:27:30','2026-09-20 04:27:30'),(6,'Jim Collins','2026-09-20 04:28:42','2026-09-20 04:28:42');
 /*!40000 ALTER TABLE `authors` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -124,7 +124,7 @@ CREATE TABLE `book_img` (
   PRIMARY KEY (`img_id`),
   KEY `book_img_thumbnail_index` (`book_id`,`is_thumbnail`),
   CONSTRAINT `book_img_ibfk_1` FOREIGN KEY (`book_id`) REFERENCES `books` (`book_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -133,7 +133,7 @@ CREATE TABLE `book_img` (
 
 LOCK TABLES `book_img` WRITE;
 /*!40000 ALTER TABLE `book_img` DISABLE KEYS */;
-INSERT INTO `book_img` VALUES (1,1,'/uploads/books/a252125f-61a4-4518-88f5-8d6cf58c5e69.webp',1,'2026-09-19 23:44:06'),(2,2,'/uploads/books/3a29b0d4-2563-43fe-b714-8dd8b62c3a97.webp',1,'2026-09-19 23:50:03'),(3,3,'/uploads/books/bc2a1b84-3fde-418e-9121-95d5ad1a9bda.jpg',1,'2026-09-19 23:51:05');
+INSERT INTO `book_img` VALUES (1,1,'/uploads/books/a252125f-61a4-4518-88f5-8d6cf58c5e69.webp',1,'2026-09-19 23:44:06'),(2,2,'/uploads/books/3a29b0d4-2563-43fe-b714-8dd8b62c3a97.webp',1,'2026-09-19 23:50:03'),(3,3,'/uploads/books/bc2a1b84-3fde-418e-9121-95d5ad1a9bda.jpg',1,'2026-09-19 23:51:05'),(4,4,'/uploads/books/42bffcfd-dde8-4784-b814-542a9ae1108b.jpg',1,'2026-09-20 04:26:44'),(5,5,'/uploads/books/b6bb99f3-590b-4c19-8b83-d27f2c9cb2a3.jpg',1,'2026-09-20 04:28:04'),(6,6,'/uploads/books/4553c377-e4bc-40a2-b038-aedf88cecbda.jpg',1,'2026-09-20 04:29:19');
 /*!40000 ALTER TABLE `book_img` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -158,7 +158,7 @@ CREATE TABLE `book_reviews` (
   CONSTRAINT `book_reviews_book_fk` FOREIGN KEY (`book_id`) REFERENCES `books` (`book_id`) ON DELETE CASCADE,
   CONSTRAINT `book_reviews_user_fk` FOREIGN KEY (`user_id`) REFERENCES `auth_users` (`id`) ON DELETE CASCADE,
   CONSTRAINT `book_reviews_rating_check` CHECK ((`rating` between 1 and 5))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -167,7 +167,35 @@ CREATE TABLE `book_reviews` (
 
 LOCK TABLES `book_reviews` WRITE;
 /*!40000 ALTER TABLE `book_reviews` DISABLE KEYS */;
+INSERT INTO `book_reviews` VALUES (1,1,1,5,'Sách hay nha','2026-09-20 04:19:42','2026-09-20 04:19:42'),(2,1,2,5,'Sách hay nha','2026-09-20 04:22:28','2026-09-20 04:22:28'),(3,2,2,5,'Sách mới','2026-09-20 04:22:48','2026-09-20 04:22:48'),(5,4,2,4,'Sách hay nha','2026-09-20 04:31:15','2026-09-20 04:31:15'),(6,5,1,4,'Sách hay nha','2026-09-20 04:31:25','2026-09-20 04:31:25'),(7,6,1,4,'Sách hay nha','2026-09-20 04:36:55','2026-09-20 04:36:55');
 /*!40000 ALTER TABLE `book_reviews` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `book_save`
+--
+
+DROP TABLE IF EXISTS `book_save`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `book_save` (
+  `user_id` bigint unsigned NOT NULL,
+  `book_id` int NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`user_id`,`book_id`),
+  KEY `fk_book_save_book` (`book_id`),
+  CONSTRAINT `fk_book_save_book` FOREIGN KEY (`book_id`) REFERENCES `books` (`book_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_book_save_user` FOREIGN KEY (`user_id`) REFERENCES `auth_users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `book_save`
+--
+
+LOCK TABLES `book_save` WRITE;
+/*!40000 ALTER TABLE `book_save` DISABLE KEYS */;
+/*!40000 ALTER TABLE `book_save` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -197,7 +225,7 @@ CREATE TABLE `books` (
   KEY `books_language_index` (`language`),
   CONSTRAINT `fk_author` FOREIGN KEY (`author_id`) REFERENCES `authors` (`author_id`),
   CONSTRAINT `fk_publisher` FOREIGN KEY (`publisher_id`) REFERENCES `publisher` (`publisher_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -206,7 +234,7 @@ CREATE TABLE `books` (
 
 LOCK TABLES `books` WRITE;
 /*!40000 ALTER TABLE `books` DISABLE KEYS */;
-INSERT INTO `books` VALUES (1,'Sapiens: A Brief History of Humankind','978-0099590088',1,1,'2011-01-01','Tiếng Việt','A groundbreaking narrative of humanity\'s creation and evolution, from the Stone Age through the 21st century, exploring how biology and history shaped what it means to be human.','2026-09-19 23:44:06','2026-09-19 23:44:06','available'),(2,'The Name of the Wind','978-0099590099',3,3,'2011-01-01','Tiếng Việt','A landmark work in psychology that explores the two systems driving how we think: the fast, intuitive system and the slower, deliberate, rational one.','2026-09-19 23:50:03','2026-09-19 23:50:03','available'),(3,'Thinking, Fast and Slow','978-0099590011',3,4,'2011-01-01','Tiếng Việt','A landmark work in psychology that explores the two systems driving how we think: the fast, intuitive system and the slower, deliberate, rational one.','2026-09-19 23:51:05','2026-09-19 23:51:05','available');
+INSERT INTO `books` VALUES (1,'Sapiens: A Brief History of Humankind','978-0099590088',1,1,'2011-01-01','Tiếng Việt','A groundbreaking narrative of humanity\'s creation and evolution, from the Stone Age through the 21st century, exploring how biology and history shaped what it means to be human.','2026-09-19 23:44:06','2026-09-19 23:44:06','available'),(2,'The Name of the Wind','978-0099590099',3,3,'2011-01-01','Tiếng Việt','A landmark work in psychology that explores the two systems driving how we think: the fast, intuitive system and the slower, deliberate, rational one.','2026-09-19 23:50:03','2026-09-19 23:50:03','available'),(3,'Thinking, Fast and Slow','978-0099590011',3,4,'2011-01-01','Tiếng Việt','A landmark work in psychology that explores the two systems driving how we think: the fast, intuitive system and the slower, deliberate, rational one.','2026-09-19 23:51:05','2026-09-19 23:51:05','available'),(4,'James Clear','978-0099590022',4,2,'2012-01-01','Tiếng Việt','A revolutionary framework for building good habits and breaking bad ones, showing how 1% improvements compound into remarkable long-term results.','2026-09-20 04:26:44','2026-09-20 04:26:44','available'),(5,'Zero to One','978-0099590033',5,4,'2015-01-01','Tiếng Việt','Notes on startups and how to build the future. Every moment in business happens only once; progress comes from doing new things, not copying what already exists.','2026-09-20 04:28:04','2026-09-20 04:28:04','available'),(6,'Good to Great','978-0099590044',6,4,'2013-01-01','Tiếng Việt','Based on five years of rigorous research, Collins examines why some companies make the leap to sustained greatness while comparable companies fail to do so.','2026-09-20 04:29:19','2026-09-20 04:29:19','available');
 /*!40000 ALTER TABLE `books` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -286,7 +314,7 @@ CREATE TABLE `refresh_tokens` (
   KEY `refresh_tokens_user_id_index` (`user_id`),
   KEY `refresh_tokens_expires_at_index` (`expires_at`),
   CONSTRAINT `refresh_tokens_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `auth_users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -295,7 +323,7 @@ CREATE TABLE `refresh_tokens` (
 
 LOCK TABLES `refresh_tokens` WRITE;
 /*!40000 ALTER TABLE `refresh_tokens` DISABLE KEYS */;
-INSERT INTO `refresh_tokens` VALUES (1,1,'6222f51f0eca27a82792f3ccf22ff1af178b58a94eb3958cdf00f1ac0262b8a5','2026-09-27 01:48:58',NULL,'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Mobile Safari/537.36','::1','2026-09-19 18:48:57'),(2,2,'6bdd8505d93a68815f004942ab829d4fa8fd1c3ddc4d4ce4fd766857c95c3c91','2026-09-27 05:04:18',NULL,'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36','::1','2026-09-19 22:04:18'),(3,2,'9d28cac588ed1491b37a55863fc014f975a385ab1c2a0e9524ab3827cce5d238','2026-09-27 05:06:46',NULL,'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Mobile Safari/537.36','::1','2026-09-19 22:06:46'),(4,2,'81d1669166604e8a62b52967681abe3ee13c08fce24d1b632d1468b6b8717c34','2026-09-27 05:51:57',NULL,'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36','::1','2026-09-19 22:51:57'),(5,2,'eb878413ddf7c349bf7b05031438cef0980c92d73f591efc3b7238e98f7a7a05','2026-09-27 06:07:29',NULL,'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36','::1','2026-09-19 23:07:29'),(6,2,'c669f2987c8063cb0dd591475cc3a1bb935d9df366f1c229dd778fbd1d1069d4','2026-09-27 06:38:51','2026-09-19 23:58:45','Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36','::1','2026-09-19 23:38:52'),(7,1,'fd3300f99da640b2a9a6fa3392918423f308adc42104b45be2317eabb7a3ca3b','2026-09-27 06:59:01',NULL,'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36','::1','2026-09-19 23:59:01');
+INSERT INTO `refresh_tokens` VALUES (1,1,'6222f51f0eca27a82792f3ccf22ff1af178b58a94eb3958cdf00f1ac0262b8a5','2026-09-27 01:48:58',NULL,'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Mobile Safari/537.36','::1','2026-09-19 18:48:57'),(2,2,'6bdd8505d93a68815f004942ab829d4fa8fd1c3ddc4d4ce4fd766857c95c3c91','2026-09-27 05:04:18',NULL,'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36','::1','2026-09-19 22:04:18'),(3,2,'9d28cac588ed1491b37a55863fc014f975a385ab1c2a0e9524ab3827cce5d238','2026-09-27 05:06:46',NULL,'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Mobile Safari/537.36','::1','2026-09-19 22:06:46'),(4,2,'81d1669166604e8a62b52967681abe3ee13c08fce24d1b632d1468b6b8717c34','2026-09-27 05:51:57',NULL,'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36','::1','2026-09-19 22:51:57'),(5,2,'eb878413ddf7c349bf7b05031438cef0980c92d73f591efc3b7238e98f7a7a05','2026-09-27 06:07:29',NULL,'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36','::1','2026-09-19 23:07:29'),(6,2,'c669f2987c8063cb0dd591475cc3a1bb935d9df366f1c229dd778fbd1d1069d4','2026-09-27 06:38:51','2026-09-19 23:58:45','Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36','::1','2026-09-19 23:38:52'),(7,1,'fd3300f99da640b2a9a6fa3392918423f308adc42104b45be2317eabb7a3ca3b','2026-09-27 06:59:01',NULL,'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36','::1','2026-09-19 23:59:01'),(8,2,'a17a321e4ede62f55d7f2376b1cc835a419ab4f8685fb72575053d8cd2642505','2026-09-27 11:25:12','2026-09-20 04:29:28','Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Mobile Safari/537.36','::1','2026-09-20 04:25:13'),(9,1,'d2add7367fa22582d639f8146866535f694a77bef9f417653f1b3abef7bfc699','2026-09-27 11:29:40',NULL,'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36','::1','2026-09-20 04:29:41');
 /*!40000 ALTER TABLE `refresh_tokens` ENABLE KEYS */;
 UNLOCK TABLES;
 SET @@SESSION.SQL_LOG_BIN = @MYSQLDUMP_TEMP_LOG_BIN;
@@ -309,4 +337,4 @@ SET @@SESSION.SQL_LOG_BIN = @MYSQLDUMP_TEMP_LOG_BIN;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-09-20 10:58:51
+-- Dump completed on 2026-09-21  6:29:04

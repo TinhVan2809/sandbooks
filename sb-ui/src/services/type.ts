@@ -17,6 +17,15 @@ export type RegisterPayload = {
   password: string;
 };
 
+export type AuthUser = {
+  id: number;
+  username: string;
+  nickname: string;
+  role: string;
+  createdAt?: string;
+  updatedAt?: string;
+};
+
 export type ChangePasswordInput = {
   currentPassword: string;
   newPassword: string;
