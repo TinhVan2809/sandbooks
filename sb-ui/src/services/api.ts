@@ -4,6 +4,16 @@ export const API_IMG_URL = "https://sandbooks-api.vercel.app";
 
 import { type LoginInput, type RegisterPayload, type ApiResponse, type AuthUser, type Book, type CatalogItem, type Category, type CreateBookPayload } from "./type";
 
+class ApiError extends Error {
+  status: number;
+
+  constructor(message: string, status: number) {
+    super(message);
+    this.name = "ApiError";
+    this.status = status;
+  }
+}
+
 const request = async <T>(path: string, options: RequestInit): Promise<ApiResponse<T>> => {
   const headers = options.body instanceof FormData
     ? { ...options.headers }
@@ -17,7 +27,7 @@ const request = async <T>(path: string, options: RequestInit): Promise<ApiRespon
   const body = await response.json();
 
   if (!response.ok) {
-    throw new Error(body.message || "Request failed");
+    throw new ApiError(body.message || "Request failed", response.status);
   }
 
   return body as ApiResponse<T>;
@@ -31,7 +41,11 @@ export const login = (payload: LoginInput) =>
   });
 
 export const getCurrentUser = () =>
-  request<{ user: AuthUser }>("/auth/me", { method: "GET" }).catch(async () => {
+  request<{ user: AuthUser }>("/auth/me", { method: "GET" }).catch(async (error: unknown) => {
+    if (!(error instanceof ApiError) || error.status !== 401) {
+      throw error;
+    }
+
     await request<{ user: AuthUser }>("/auth/refresh", { method: "POST" });
     return request<{ user: AuthUser }>("/auth/me", { method: "GET" });
   });

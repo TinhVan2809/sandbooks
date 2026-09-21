@@ -96,8 +96,8 @@ const configuredCorsOrigins = readOptionalString("CORS_ORIGIN")
 
 const nodeEnv = process.env.NODE_ENV || "development";
 const isProduction = nodeEnv === "production";
-const cookieSameSite = readSameSite();
 const cookieSecure = readBoolean("COOKIE_SECURE", isProduction);
+const cookieSameSite = isProduction ? "none" : readSameSite();
 
 if (cookieSameSite === "none" && !cookieSecure) {
   throw new Error("COOKIE_SAME_SITE=none requires COOKIE_SECURE=true");
