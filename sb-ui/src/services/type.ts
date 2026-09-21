@@ -47,6 +47,10 @@ export type CatalogItem = {
   name: string;
 };
 
+export type Category = CatalogItem & {
+  description?: string | null;
+};
+
 export type Book = {
   id: number;
   title: string;

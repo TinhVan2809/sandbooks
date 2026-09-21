@@ -2,7 +2,7 @@ const API_BASE_URL = "http://localhost:8000/api";
 
 export const API_IMG_URL = "http://localhost:8000";
 
-import { type LoginInput, type RegisterPayload, type ApiResponse, type AuthUser, type Book, type CatalogItem, type CreateBookPayload } from "./type";
+import { type LoginInput, type RegisterPayload, type ApiResponse, type AuthUser, type Book, type CatalogItem, type Category, type CreateBookPayload } from "./type";
 
 const request = async <T>(path: string, options: RequestInit): Promise<ApiResponse<T>> => {
   const headers = options.body instanceof FormData
@@ -58,7 +58,7 @@ export const getAuthors = () => request<{ items: CatalogItem[] }>("/authors", { 
 
 export const getPublishers = () => request<{ items: CatalogItem[] }>("/publishers", { method: "GET" });
 
-export const getCategories = () => request<{ items: CatalogItem[] }>("/categories", { method: "GET" });
+export const getCategories = () => request<{ items: Category[] }>("/categories", { method: "GET" });
 
 export const createBook = (payload: CreateBookPayload, files: File[]) => {
   const formData = new FormData();

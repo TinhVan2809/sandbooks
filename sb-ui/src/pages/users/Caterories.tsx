@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { getCategories } from "../../services/api";
+import type { Category } from "../../services/type";
 
-function CategoryCard({ category }) {
+function CategoryCard({ category }: { category: Category }) {
     return (
         <button className="group bg-white p-5 text-left hover:bg-[#eef3ea] transition-colors">
             <h3 className="text-base font-semibold text-foreground mb-1 group-hover:text-primary transition-colors">{category.name}</h3>
@@ -12,7 +13,7 @@ function CategoryCard({ category }) {
 
 function Categories() {
 
-    const [categories, setCategories] = useState([]);
+    const [categories, setCategories] = useState<Category[]>([]);
 
     useEffect(() => {
         const handleFetchCategories = async () => {
