@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
-import { RiStarFill, RiStarHalfFill, RiBookmarkLine } from "@remixicon/react";
+import { RiStarFill, RiStarHalfFill } from "@remixicon/react";
 import { API_IMG_URL } from "../../services/api";
 import { type Book } from "../../services/type";
+import SaveBookButton from "./SaveBookButton";
 
 interface BookCardProps {
     mostReviewedBooks?: Book[];
@@ -46,7 +47,7 @@ function BookCard({ mostReviewedBooks, books }: BookCardProps) {
                     className="bg-white rounded border border-[#e3e7df] overflow-hidden shadow-sm hover:border-[#98bd63] transition-all duration-300 flex flex-col group"
                 >
                     {/* Thumbnail */}
-                    <div className="aspect-[3/4] w-full overflow-hidden bg-gray-100 relative">
+                    <div className="aspect-3/4 w-full overflow-hidden bg-gray-100 relative">
                         <img
                             src={book.thumbnailUrl ? `${API_IMG_URL}${book.thumbnailUrl}` : "/placeholder.jpg"}
                             alt={book.title}
@@ -61,9 +62,7 @@ function BookCard({ mostReviewedBooks, books }: BookCardProps) {
                             <h3 className="font-display text-lg text-slate-800 line-clamp-2 leading-snug group-hover:text-[#4d7529] transition-colors">
                                 {book.title}
                             </h3>
-                            <button className="text-slate-400 hover:text-slate-600 transition-colors shrink-0 mt-0.5" title="Bookmark">
-                                <RiBookmarkLine className="w-5 h-5" />
-                            </button>
+                            <SaveBookButton bookId={book.id} className="mt-0.5 shrink-0 text-slate-400 transition-colors hover:text-slate-600" />
                         </div>
 
                         {/* Author */}
@@ -91,7 +90,7 @@ function BookCard({ mostReviewedBooks, books }: BookCardProps) {
                             </span>
                             <Link
                                 to={`/detail/${book.id}`}
-                                className="inline-flex items-center gap-1 text-sm font-medium text-[#3b661d] hover:text-[#284813] hover:underline transition-colors text-xs"
+                                className="inline-flex items-center gap-1 font-medium text-[#3b661d] hover:text-[#284813] hover:underline transition-colors text-xs"
                             >
                                 View Book &rarr;
                             </Link>

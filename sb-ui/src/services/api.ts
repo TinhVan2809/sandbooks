@@ -47,6 +47,11 @@ export const logout = () =>
     method: "POST",
   });
 
+export const saveBook = (bookId: number) =>
+  request<null>(`/books/${bookId}/save`, {
+    method: "POST",
+  });
+
 
 
 export const getAuthors = () => request<{ items: CatalogItem[] }>("/authors", { method: "GET" });

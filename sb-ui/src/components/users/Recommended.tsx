@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { getRecommendedBooks, API_IMG_URL, getNewestBooks } from "../../services/api";
-import { RiStarFill, RiArrowLeftSLine, RiArrowRightSLine, RiBookmarkLine } from "@remixicon/react";
+import { RiStarFill, RiArrowLeftSLine, RiArrowRightSLine } from "@remixicon/react";
 import { Link } from "react-router-dom";
 import { type Book } from "../../services/type";
+import SaveBookButton from "./SaveBookButton";
 
 function Card({ card }: { card: Book[] }) {
     return (
@@ -10,23 +11,15 @@ function Card({ card }: { card: Book[] }) {
             {card?.length > 0 ? (
                 <div className="flex gap-4">
                     {card.map((r) => (
-                        <div className="w-40 sm:w-44 shrink-0" key={r.id}>
+                        <div className="group relative w-40 shrink-0 sm:w-44" key={r.id}>
                             <Link to={`/detail/${r.id}`} className="block h-full">
-                                <div className="group bg-white border border-[#e3e7df] rounded-lg overflow-hidden hover:border-[#98bd63] hover:shadow-sm transition-all cursor-pointer h-full flex flex-col">
-                                    <div className="aspect-[2/3] bg-gray-100 overflow-hidden relative">
+                                <div className="flex h-full cursor-pointer flex-col overflow-hidden rounded-lg border border-[#e3e7df] bg-white transition-all hover:border-[#98bd63] hover:shadow-sm">
+                                    <div className="aspect-2/3 bg-gray-100 overflow-hidden relative">
                                         <img
                                             src={r.thumbnailUrl ? `${API_IMG_URL}${r.thumbnailUrl}` : "/placeholder.jpg"}
                                             alt={r.title}
                                             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                                         />
-                                        <button
-                                            className="absolute top-2 right-2 w-7 h-7 rounded flex items-center justify-center bg-white/90 backdrop-blur-sm transition-all opacity-0 group-hover:opacity-100 text-[#3b661d] hover:bg-white"
-                                            onClick={(e) => {
-                                                e.preventDefault(); // Prevent navigating to the link when clicking the button
-                                            }}
-                                        >
-                                            <RiBookmarkLine size={15} />
-                                        </button>
                                     </div>
                                     <div className="p-3 flex flex-col flex-1">
                                         <p className="text-[10px] font-medium text-[#84ac51] uppercase tracking-wider mb-1 line-clamp-1">
@@ -47,6 +40,10 @@ function Card({ card }: { card: Book[] }) {
                                     </div>
                                 </div>
                             </Link>
+                            <SaveBookButton
+                                bookId={r.id}
+                                className="absolute right-2 top-2 z-10 flex h-7 w-7 items-center justify-center rounded bg-white/90 text-[#3b661d] opacity-0 backdrop-blur-sm transition-all hover:bg-white group-hover:opacity-100"
+                            />
                         </div>
                     ))}
                 </div>
