@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import {
     RiSearchLine, RiNotification4Line,
     RiBookmarkLine, RiMenuLine, RiCloseLine, RiUserLine
@@ -18,10 +18,10 @@ function Header() {
         <header className="bg-white sticky top-0 z-50 border-b border-stone-500/10">
             <div className="flex justify-between items-center max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="w-full flex items-center justify-between h-14">
-                    <div className="flex items-center gap-1">
+                    <Link to="/" className="flex items-center gap-1 cursor-pointer">
                         <img src="/SANDBOOKS.png" alt="SandBooks" className="h-8 w-8 rounded-xl object-cover" />
                         <span className="font-display text-base tracking-tight text-[#18181a] sm:text-lg">SandBooks</span>
-                    </div>
+                    </Link>
                     <nav className="hidden md:flex items-center gap-1">
 
                         <NavLink to={"/"} className={({ isActive }) => `px-3 py-1.5 text-sm rounded transition-colors ${isActive ? "text-[#2c5f2d]" : "text-[#6B5768]"} hover:text-[#2c5f2d] font-medium`}>Home</NavLink>
@@ -57,6 +57,12 @@ function Header() {
                     <NavLink to="/discovery" className={mobileNavClassName} onClick={() => setIsMobileMenuOpen(false)}>Khám phá</NavLink>
                     <NavLink to="/categories" className={mobileNavClassName} onClick={() => setIsMobileMenuOpen(false)}>Thể loại</NavLink>
                     <NavLink to="/my-library" className={mobileNavClassName} onClick={() => setIsMobileMenuOpen(false)}>My Library</NavLink>
+                    <NavLink to={user ? "/profile" : "/login"} aria-label={user ? "Mở hồ sơ" : "Đăng nhập"} className={mobileNavClassName} onClick={() => setIsMobileMenuOpen(false)}>
+                        <div className="flex items-center gap-2">
+                            <RiUserLine size={20} />
+                            <span>{user ? "Hồ sơ" : "Đăng nhập"}</span>
+                        </div>
+                    </NavLink>
                 </div>
             </div>
         </header>

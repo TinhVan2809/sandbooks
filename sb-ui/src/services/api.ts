@@ -114,3 +114,6 @@ export const getRecommendedBooks = () =>
 
 export const getBookById = (bookId: number) =>
   request<{ book: Book }>(`/books/${bookId}`, { method: "GET" });
+
+export const getBooksSavedByUser = () =>
+  request<{ items: Book[] }>("/books/saved", { method: "GET" });

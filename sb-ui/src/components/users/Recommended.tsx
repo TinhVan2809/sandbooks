@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { getRecommendedBooks, getImageUrl, getNewestBooks } from "../../services/api";
-import { RiStarFill, RiArrowLeftSLine, RiArrowRightSLine } from "@remixicon/react";
+import { RiArrowLeftSLine, RiArrowRightSLine } from "@remixicon/react";
 import { Link } from "react-router-dom";
 import { type Book } from "../../services/type";
 import SaveBookButton from "./SaveBookButton";
+import StarRating from "./StartRating";
 
 function Card({ card, loading }: { card: Book[]; loading: boolean }) {
     if (loading) {
@@ -55,7 +56,7 @@ function Card({ card, loading }: { card: Book[]; loading: boolean }) {
                                             {r.author?.name || "Đang cập nhật"}
                                         </p>
                                         <div className="flex items-center gap-1 mt-auto">
-                                            <RiStarFill className="w-3.5 h-3.5 text-[#84ac51]" />
+                                           <StarRating rating={r.rating || 0} />
                                             <span className="text-xs font-medium text-slate-700">
                                                 {r.rating ? r.rating.toFixed(1) : "0.0"}
                                             </span>

@@ -81,9 +81,7 @@ const unsaveBook = asyncHandler(async (req, res) => {
 });
 
 const getSavedBooks = asyncHandler(async (req, res) => {
-  // Get from req.params to allow fetching any user's saved books (if authorized, but for now we'll just fetch based on params)
-  const { id: userId } = req.params;
-  const items = await bookService.getSavedBooks(userId);
+  const items = await bookService.getSavedBooks(req.user.id);
   res.status(200).json({ success: true, data: { items } });
 });
 
