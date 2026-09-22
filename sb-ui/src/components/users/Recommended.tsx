@@ -5,7 +5,30 @@ import { Link } from "react-router-dom";
 import { type Book } from "../../services/type";
 import SaveBookButton from "./SaveBookButton";
 
-function Card({ card }: { card: Book[] }) {
+function Card({ card, loading }: { card: Book[]; loading: boolean }) {
+    if (loading) {
+        return (
+            <div className="flex gap-4" aria-label="Đang tải sách" aria-busy="true">
+                {Array.from({ length: 4 }, (_, index) => (
+                    <div
+                        key={index}
+                        className="w-40 shrink-0 animate-pulse sm:w-44"
+                    >
+                        <div className="overflow-hidden rounded-lg border border-[#e3e7df] bg-white">
+                            <div className="aspect-2/3 bg-gray-200" />
+                            <div className="space-y-2 p-3">
+                                <div className="h-2.5 w-1/3 rounded bg-gray-200" />
+                                <div className="h-4 w-4/5 rounded bg-gray-200" />
+                                <div className="h-4 w-3/5 rounded bg-gray-200" />
+                                <div className="mt-3 h-3 w-1/4 rounded bg-gray-200" />
+                            </div>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        );
+    }
+
     return (
         <>
             {card?.length > 0 ? (
@@ -54,6 +77,7 @@ function Card({ card }: { card: Book[] }) {
 
 function Trending() {
     const [trending, setTrending] = useState<Book[]>([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const handleFetchRecommended = async () => {
@@ -64,19 +88,22 @@ function Trending() {
                 }
             } catch (_err) {
                 console.log("Error fething trending", _err);
+            } finally {
+                setLoading(false);
             }
         }
         handleFetchRecommended();
     }, []);
     return (
         <div className="">
-            <Card card={trending} />
+            <Card card={trending} loading={loading} />
         </div>
     );
 }
 
 function NewArrivals() {
     const [newArrivals, setNewArrivals] = useState<Book[]>([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const handleFetchNewArrivals = async () => {
@@ -87,13 +114,15 @@ function NewArrivals() {
                 }
             } catch (_err) {
                 console.error("Error fetching New Arrivals", _err);
+            } finally {
+                setLoading(false);
             }
         }
         handleFetchNewArrivals();
     }, []);
     return (
         <div className="">
-            <Card card={newArrivals} />
+            <Card card={newArrivals} loading={loading} />
         </div>
     )
 }

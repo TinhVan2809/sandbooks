@@ -29,16 +29,67 @@ function StarRating({ rating }: { rating: number }) {
     );
 }
 
+function DetailSkeleton() {
+    return (
+        <div className="mx-auto max-w-7xl animate-pulse px-4 py-12 sm:px-6 lg:px-8" aria-label="Đang tải thông tin sách" aria-busy="true">
+            <div className="grid grid-cols-1 gap-12 lg:grid-cols-[280px_1fr]">
+                <div className="flex flex-col gap-4">
+                    <div className="mx-auto aspect-2/3 w-full max-w-70 rounded bg-gray-200 lg:mx-0" />
+                    <div className="mx-auto flex w-full max-w-70 flex-col gap-2 lg:mx-0">
+                        <div className="h-12 rounded bg-gray-200" />
+                        <div className="h-12 rounded bg-gray-200" />
+                        <div className="h-12 rounded bg-gray-200" />
+                    </div>
+                </div>
+
+                <div className="flex flex-col gap-6">
+                    <div>
+                        <div className="mb-3 h-6 w-20 rounded-full bg-gray-200" />
+                        <div className="mb-3 h-12 w-4/5 rounded bg-gray-200 sm:h-14" />
+                        <div className="h-6 w-2/5 rounded bg-gray-200" />
+                    </div>
+                    <div className="flex items-center justify-between border-b border-border pb-6">
+                        <div className="h-5 w-40 rounded bg-gray-200" />
+                        <div className="h-6 w-20 rounded-full bg-gray-200" />
+                    </div>
+                    <div className="space-y-3">
+                        <div className="h-4 w-20 rounded bg-gray-200" />
+                        <div className="h-4 w-full rounded bg-gray-200" />
+                        <div className="h-4 w-11/12 rounded bg-gray-200" />
+                        <div className="h-4 w-4/5 rounded bg-gray-200" />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4 rounded border border-border bg-white p-4 sm:grid-cols-4">
+                        {Array.from({ length: 4 }, (_, index) => (
+                            <div key={index} className="space-y-2">
+                                <div className="h-3 w-3/4 rounded bg-gray-200" />
+                                <div className="h-4 w-4/5 rounded bg-gray-200" />
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}
+
 function Detail() {
 
     const { bookId } = useParams<{ bookId: string }>();
 
     const [detail, setDetail] = useState<Book | null>(null);
+    const [loading, setLoading] = useState(true);
 
 
     useEffect(() => {
         const fetchBookDetail = async () => {
-            if (!bookId) return;
+            setLoading(true);
+            setDetail(null);
+
+            if (!bookId) {
+                setLoading(false);
+                return;
+            }
+
             const bookIdNumber = parseInt(bookId, 10);
             try {
                 const response = await getBookById(bookIdNumber);
@@ -47,6 +98,8 @@ function Detail() {
                 }
             } catch (error) {
                 console.error("Error fetching book detail:", error);
+            } finally {
+                setLoading(false);
             }
         };
 
@@ -55,7 +108,9 @@ function Detail() {
 
     return (
         <section className="">
-            {detail ? (
+            {loading ? (
+                <DetailSkeleton />
+            ) : detail ? (
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
                     <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-12">
                         <div className="flex flex-col gap-4">

@@ -30,7 +30,7 @@ function Banner() {
                                 </div>
                             </div>
                         </div>
-                        <div className="hidden lg:flex items-end justify-center h-[340px] gap-1 relative">
+                        <div className="hidden lg:flex items-end justify-center h-85 gap-1 relative">
                             <img src="/booksection.png" className="w-full h-full" />
                         </div>
                     </div>

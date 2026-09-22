@@ -4,7 +4,25 @@ import { getListBooks, getImageUrl } from "../../services/api";
 import { type Book } from "../../services/type";
 import { RiLayoutGridLine, RiListUnordered, RiStarFill, RiBookmarkLine } from "@remixicon/react";
 
-function BookCardDiscoverMenu({ book }: { book: Book[] }) {
+function BookCardDiscoverMenu({ book, loading }: { book: Book[]; loading: boolean }) {
+    if (loading) {
+        return (
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 lg:gap-5" aria-label="Đang tải sách" aria-busy="true">
+                {Array.from({ length: 10 }, (_, index) => (
+                    <div key={index} className="animate-pulse overflow-hidden rounded border border-border bg-white">
+                        <div className="aspect-2/3 bg-gray-200" />
+                        <div className="space-y-2 p-3">
+                            <div className="h-2.5 w-1/3 rounded bg-gray-200" />
+                            <div className="h-4 w-4/5 rounded bg-gray-200" />
+                            <div className="h-4 w-3/5 rounded bg-gray-200" />
+                            <div className="mt-2 h-3 w-1/4 rounded bg-gray-200" />
+                        </div>
+                    </div>
+                ))}
+            </div>
+        );
+    }
+
     return (
         <>
             {book?.length > 0 ? (
@@ -34,7 +52,26 @@ function BookCardDiscoverMenu({ book }: { book: Book[] }) {
     )
 }
 
-function BookCardDiscoverMenuList({ book }: { book: Book[] }) {
+function BookCardDiscoverMenuList({ book, loading }: { book: Book[]; loading: boolean }) {
+    if (loading) {
+        return (
+            <div className="mt-4 flex flex-col border-t border-border" aria-label="Đang tải sách" aria-busy="true">
+                {Array.from({ length: 6 }, (_, index) => (
+                    <div key={index} className="flex animate-pulse items-start border-b border-border py-5">
+                        <div className="mr-4 h-16 w-12 shrink-0 rounded bg-gray-200 sm:h-24 sm:w-16" />
+                        <div className="min-w-0 flex-1 space-y-2 pr-4">
+                            <div className="h-4 w-3/5 rounded bg-gray-200" />
+                            <div className="h-3 w-2/5 rounded bg-gray-200" />
+                            <div className="h-3 w-full rounded bg-gray-200" />
+                            <div className="h-3 w-4/5 rounded bg-gray-200" />
+                        </div>
+                        <div className="hidden h-3 w-16 rounded bg-gray-200 sm:block" />
+                    </div>
+                ))}
+            </div>
+        );
+    }
+
     return (
         <>
             {book?.length > 0 ? (
@@ -97,6 +134,7 @@ function Discover() {
 
     const [books, setBooks] = useState<Book[]>([]);
     const [total, setTotal] = useState<number | null>(null);
+    const [loading, setLoading] = useState(true);
 
     const [isDisplay, setIsDisplay] = useState("menu");
 
@@ -110,6 +148,8 @@ function Discover() {
                 }
             } catch (_err) {
                 console.error("Error fetching list books", _err);
+            } finally {
+                setLoading(false);
             }
         }
         handleFetchListBooks();
@@ -127,7 +167,7 @@ function Discover() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
                 <div className="flex justify-between items-center mb-5">
                     <div className="text-sm text-muted-foreground">
-                        <span>{total} books found</span>
+                        <span>{loading ? "Đang tải sách..." : `${total ?? 0} books found`}</span>
                     </div>
                     <div className="flex gap-3 items-center">
                         <select className="bg-white px-3 py-1">
@@ -143,10 +183,10 @@ function Discover() {
                     </div>
                 </div>
                 {isDisplay === "menu" && (
-                    <BookCardDiscoverMenu book={books} />
+                    <BookCardDiscoverMenu book={books} loading={loading} />
                 )}
                 {isDisplay === "list" && (
-                    <BookCardDiscoverMenuList book={books} />
+                    <BookCardDiscoverMenuList book={books} loading={loading} />
                 )}
             </div>
         </>
