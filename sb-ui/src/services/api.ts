@@ -22,7 +22,7 @@ class ApiError extends Error {
   }
 }
 
-const request = async <T>(path: string, options: RequestInit): Promise<ApiResponse<T>> => {
+const rawRequest = async <T>(path: string, options: RequestInit): Promise<ApiResponse<T>> => {
   const headers = options.body instanceof FormData
     ? { ...options.headers }
     : { "Content-Type": "application/json", ...options.headers };
@@ -41,6 +41,35 @@ const request = async <T>(path: string, options: RequestInit): Promise<ApiRespon
   return body as ApiResponse<T>;
 };
 
+let refreshPromise: Promise<ApiResponse<{ user: AuthUser }>> | null = null;
+
+const refreshAccessToken = () => {
+  if (!refreshPromise) {
+    refreshPromise = rawRequest<{ user: AuthUser }>("/auth/refresh", {
+      method: "POST",
+    }).finally(() => {
+      refreshPromise = null;
+    });
+  }
+
+  return refreshPromise;
+};
+
+const request = async <T>(path: string, options: RequestInit, canRefresh = true): Promise<ApiResponse<T>> => {
+  try {
+    return await rawRequest<T>(path, options);
+  } catch (error) {
+    const isAuthRequest = path.startsWith("/auth/");
+
+    if (!(error instanceof ApiError) || error.status !== 401 || !canRefresh || isAuthRequest) {
+      throw error;
+    }
+
+    await refreshAccessToken();
+    return request<T>(path, options, false);
+  }
+};
+
 // [Auth]
 export const login = (payload: LoginInput) =>
   request<{ user: AuthUser }>("/auth/login", {
@@ -49,14 +78,7 @@ export const login = (payload: LoginInput) =>
   });
 
 export const getCurrentUser = () =>
-  request<{ user: AuthUser }>("/auth/me", { method: "GET" }).catch(async (error: unknown) => {
-    if (!(error instanceof ApiError) || error.status !== 401) {
-      throw error;
-    }
-
-    await request<{ user: AuthUser }>("/auth/refresh", { method: "POST" });
-    return request<{ user: AuthUser }>("/auth/me", { method: "GET" });
-  });
+  request<{ user: AuthUser }>("/auth/me", { method: "GET" });
 
 export const register = (payload: RegisterPayload) =>
   request<{ user: { id: number; nickname: string; username: string } }>("/auth/register", {

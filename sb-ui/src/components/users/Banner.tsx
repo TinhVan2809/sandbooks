@@ -31,8 +31,156 @@ function Banner() {
                             </div>
                         </div>
                         <div className="hidden lg:flex items-end justify-center h-85 gap-1 relative">
-                            <img src="/booksection.png" className="w-full h-full" />
+                            <div className="absolute bottom-0 left-0 right-0 h-px bg-border"></div>
+                            <div
+                                className="rounded-t-xs relative shrink-0 transition-transform hover:-translate-y-1"
+                                style={{ height: 58, width: 28, backgroundColor: "rgb(44, 95, 45)" }}
+                            >
+                                <div
+                                    className="absolute inset-x-0 top-3 flex items-center justify-center"
+                                                                        style={{ writingMode: "vertical-rl", textOrientation: "mixed", transform: "rotate(180deg)" }}
+                                >
+                                    <div
+                                        className="text-[7px] tracking-widest font-medium opacity-40"
+                                        style={{ color: "rgb(255, 255, 255)" }}
+                                    >
+                                        ABCD
+                                    </div>
+                                </div>
+                            </div>
+                            <div
+                                className="rounded-t-xs relative shrink-0 transition-transform hover:-translate-y-1"
+                                style={{ height: 72, width: 20, backgroundColor: "rgb(151, 188, 98)" }}
+                            ></div>
+                            <div
+                                className="rounded-t-xs relative shrink-0 transition-transform hover:-translate-y-1"
+                                style={{ height: 48, width: 36, backgroundColor: "rgb(26, 58, 27)" }}
+                            >
+                                <div
+                                    className="absolute inset-x-0 top-3 flex items-center justify-center"
+                                                                        style={{ writingMode: "vertical-rl", textOrientation: "mixed", transform: "rotate(180deg)" }}
+                                >
+                                    <div
+                                        className="text-[7px] tracking-widest font-medium opacity-40"
+                                        style={{ color: "rgb(255, 255, 255)" }}
+                                    >
+                                        ABC
+                                    </div>
+                                </div>
+                            </div>
+                            <div
+                                className="rounded-t-xs relative shrink-0 transition-transform hover:-translate-y-1"
+                                style={{ height: 88, width: 24, backgroundColor: "rgb(74, 135, 80)" }}
+                            >
+                                <div
+                                    className="absolute inset-x-0 top-3 flex items-center justify-center"
+                                                                        style={{ writingMode: "vertical-rl", textOrientation: "mixed", transform: "rotate(180deg)" }}
+                                >
+                                    <div
+                                        className="text-[7px] tracking-widest font-medium opacity-40"
+                                        style={{ color: "rgb(255, 255, 255)" }}
+                                    >
+                                        ABCDEF
+                                    </div>
+                                </div>
+                            </div>
+                            <div
+                                className="rounded-t-xs relative shrink-0 transition-transform hover:-translate-y-1"
+                                style={{ height: 64, width: 32, backgroundColor: "rgb(197, 217, 160)" }}
+                            >
+                                <div
+                                    className="absolute inset-x-0 top-3 flex items-center justify-center"
+                                                                        style={{ writingMode: "vertical-rl", textOrientation: "mixed", transform: "rotate(180deg)" }}
+                                >
+                                    <div
+                                        className="text-[7px] tracking-widest font-medium opacity-40"
+                                        style={{ color: "rgb(44, 95, 45)" }}
+                                    >
+                                        ABCD
+                                    </div>
+                                </div>
+                            </div>
+                            <div
+                                className="rounded-t-xs relative shrink-0 transition-transform hover:-translate-y-1"
+                                style={{ height: 52, width: 18, backgroundColor: "rgb(44, 95, 45)" }}
+                            ></div>
+                            <div
+                                className="rounded-t-xs relative shrink-0 transition-transform hover:-translate-y-1"
+                                style={{ height: 80, width: 28, backgroundColor: "rgb(151, 188, 98)" }}
+                            >
+                                <div
+                                    className="absolute inset-x-0 top-3 flex items-center justify-center"
+                                                                        style={{ writingMode: "vertical-rl", textOrientation: "mixed", transform: "rotate(180deg)" }}
+                                >
+                                    <div
+                                        className="text-[7px] tracking-widest font-medium opacity-40"
+                                        style={{ color: "rgb(255, 255, 255)" }}
+                                    >
+                                        ABCDE
+                                    </div>
+                                </div>
+                            </div>
+                            <div
+                                className="rounded-t-xs relative shrink-0 transition-transform hover:-translate-y-1"
+                                style={{ height: 44, width: 22, backgroundColor: "rgb(238, 243, 234)" }}
+                            >
+                                <div
+                                    className="absolute inset-x-0 top-3 flex items-center justify-center"
+                                                                        style={{ writingMode: "vertical-rl", textOrientation: "mixed", transform: "rotate(180deg)" }}
+                                >
+                                    <div
+                                        className="text-[7px] tracking-widest font-medium opacity-40"
+                                        style={{ color: "rgb(44, 95, 45)" }}
+                                    >
+                                        ABC
+                                    </div>
+                                </div>
+                            </div>
+                            <div
+                                className="rounded-t-xs relative shrink-0 transition-transform hover:-translate-y-1"
+                                style={{ height: 76, width: 30, backgroundColor: "rgb(44, 95, 45)" }}
+                            >
+                                <div
+                                    className="absolute inset-x-0 top-3 flex items-center justify-center"
+                                                                        style={{ writingMode: "vertical-rl", textOrientation: "mixed", transform: "rotate(180deg)" }}
+                                >
+                                    <div
+                                        className="text-[7px] tracking-widest font-medium opacity-40"
+                                        style={{ color: "rgb(255, 255, 255)" }}
+                                    >
+                                        ABCDE
+                                    </div>
+                                </div>
+                            </div>
+                            <div
+                                className="rounded-t-xs relative shrink-0 transition-transform hover:-translate-y-1"
+                                style={{ height: 60, width: 16, backgroundColor: "rgb(197, 217, 160)" }}
+                            ></div>
+                            <div
+                                className="rounded-t-xs relative shrink-0 transition-transform hover:-translate-y-1"
+                                style={{ height: 92, width: 26, backgroundColor: "rgb(74, 135, 80)" }}
+                            >
+                                <div
+                                    className="absolute inset-x-0 top-3 flex items-center justify-center"
+                                                                        style={{ writingMode: "vertical-rl", textOrientation: "mixed", transform: "rotate(180deg)" }}
+                                >
+                                    <div
+                                        className="text-[7px] tracking-widest font-medium opacity-40"
+                                        style={{ color: "rgb(255, 255, 255)" }}
+                                    >
+                                        ABCDEF
+                                    </div>
+                                </div>
+                            </div>
+                            <div
+                                className="rounded-t-xs relative shrink-0 transition-transform hover:-translate-y-1"
+                                style={{ height: 56, width: 20, backgroundColor: "rgb(151, 188, 98)" }}
+                            ></div>
+                            <div
+                                className="absolute bottom-0 left-4 right-4 h-6 bg-linear-to-b from-transparent to-border/30 pointer-events-none"
+                            ></div>
                         </div>
+
                     </div>
                 </div>
             </div>

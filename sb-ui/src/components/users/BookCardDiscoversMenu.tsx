@@ -2,9 +2,12 @@ import { RiBookmarkLine } from "@remixicon/react";
 import { getImageUrl } from "../../services/api";
 import { type Book } from "../../services/type";
 import StarRating from "./StartRating";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function BookCardDiscoverMenu({ book, loading }: { book: Book[]; loading: boolean }) {
+
+    const navigate = useNavigate();
+    
     if (loading) {
         return (
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 lg:gap-5" aria-label="Đang tải sách" aria-busy="true">
@@ -28,7 +31,7 @@ function BookCardDiscoverMenu({ book, loading }: { book: Book[]; loading: boolea
             {book?.length > 0 ? (
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 lg:gap-5">
                     {book.map((b) => (
-                        <div className="group bg-card border border-border rounded overflow-hidden hover:border-primary/30 hover:shadow-sm transition-all cursor-pointer" key={b.id}>
+                        <div className="group bg-card border border-border rounded overflow-hidden hover:border-primary/30 hover:shadow-sm transition-all cursor-pointer" key={b.id} onClick={() => navigate(`/detail/${b.id}`)}>
                             <div className="aspect-2/3 bg-secondary overlow-hidden relative">
                                 <img src={getImageUrl(b.thumbnailUrl)} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                                 <button className="absolute top-2 right-2 w-7 h-7 rounded flex items-center justify-center bg-white/90 backdrop-blur-sm transition-all opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-primary"><RiBookmarkLine size={15} /></button>
@@ -47,7 +50,7 @@ function BookCardDiscoverMenu({ book, loading }: { book: Book[]; loading: boolea
                         </div>
                     ))}
                 </div>
-            ) : <p>Chưa có sách nào. <Link to="/discover" className="text-primary hover:underline">Khám phá sách</Link>s</p>}
+            ) : <p>Chưa có sách nào. <Link to="/discover" className="text-primary hover:underline">Khám phá sách</Link></p>}
         </>
     )
 }
