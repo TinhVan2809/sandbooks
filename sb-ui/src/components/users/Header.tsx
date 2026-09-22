@@ -27,14 +27,13 @@ function Header() {
                         <NavLink to={"/"} className={({ isActive }) => `px-3 py-1.5 text-sm rounded transition-colors ${isActive ? "text-[#2c5f2d]" : "text-[#6B5768]"} hover:text-[#2c5f2d] font-medium`}>Home</NavLink>
                         <NavLink to={"/discovery"} className={({ isActive }) => `px-3 py-1.5 text-sm rounded transition-colors ${isActive ? "text-[#2c5f2d]" : "text-[#6B5768]"} hover:text-[#2c5f2d] font-medium`}>Khám phá</NavLink>
                         <NavLink to={"/categories"} className={({ isActive }) => `px-3 py-1.5 text-sm rounded transition-colors ${isActive ? "text-[#2c5f2d]" : "text-[#6B5768]"} hover:text-[#2c5f2d] font-medium`}>Thể loại</NavLink>
-                        <NavLink to={"/my-library"} className={({ isActive }) => `px-3 py-1.5 text-sm rounded transition-colors ${isActive ? "text-[#2c5f2d]" : "text-[#6B5768]"} hover:text-[#2c5f2d] font-medium`}>My Library</NavLink>
 
                     </nav>
                     <div className="hidden md:flex items-center gap-2">
                         <button className="p-2 rounded hover:bg-[#f8f8f6]"><RiSearchLine size={20} className="text-[#6B5768] hover:text-[#18181a]" /></button>
                         <button className="p-2 rounded hover:bg-[#f8f8f6]"><RiNotification4Line size={20} className="text-[#6B5768] hover:text-[#18181a]" /></button>
                         <button className="p-2 rounded hover:bg-[#f8f8f6]"><RiBookmarkLine size={20} className="text-[#6B5768] hover:text-[#18181a]" /></button>
-                        <NavLink to={user ? "/profile" : "/login"} aria-label={user ? "Mở hồ sơ" : "Đăng nhập"} className="rounded-full border bg-primary p-1 text-white"><RiUserLine size={20} /></NavLink>
+                        <NavLink to={user ? "/my-library" : "/login"} aria-label={user ? "Mở hồ sơ" : "Đăng nhập"} className="rounded-full border bg-primary p-1 text-white"><RiUserLine size={20} /></NavLink>
                     </div>
                     <button
                         type="button"
@@ -57,7 +56,7 @@ function Header() {
                     <NavLink to="/discovery" className={mobileNavClassName} onClick={() => setIsMobileMenuOpen(false)}>Khám phá</NavLink>
                     <NavLink to="/categories" className={mobileNavClassName} onClick={() => setIsMobileMenuOpen(false)}>Thể loại</NavLink>
                     <NavLink to="/my-library" className={mobileNavClassName} onClick={() => setIsMobileMenuOpen(false)}>My Library</NavLink>
-                    <NavLink to={user ? "/profile" : "/login"} aria-label={user ? "Mở hồ sơ" : "Đăng nhập"} className={mobileNavClassName} onClick={() => setIsMobileMenuOpen(false)}>
+                    <NavLink to={user ? "/my-library" : "/login"} aria-label={user ? "Mở hồ sơ" : "Đăng nhập"} className={mobileNavClassName} onClick={() => setIsMobileMenuOpen(false)}>
                         <div className="flex items-center gap-2">
                             <RiUserLine size={20} />
                             <span>{user ? "Hồ sơ" : "Đăng nhập"}</span>

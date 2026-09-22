@@ -2,7 +2,6 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom"
 import Home from "./pages/users/Home"
 import Login from "./pages/auth/Login"
 import UserLayout from "./layout/UserLayout"
-import Profile from "./pages/users/Profile"
 import Register from "./pages/auth/Register"
 import AdminLayout from "./layout/AdminLayout"
 import Dashboard from "./pages/admin/Dashboard"
@@ -19,7 +18,6 @@ function App() {
       element: <UserLayout />,
       children: [
         { index: true, element: <Home /> },
-        { path: "/profile", element: <Profile /> },
         { path: "/discovery", element: <Discover /> },
         { path: "/categories", element: <Categories /> },
         { path: "/my-library", element: <MyLybrary /> },
