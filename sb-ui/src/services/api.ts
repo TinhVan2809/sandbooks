@@ -143,14 +143,15 @@ export const getBooksSavedByUser = () =>
 
 
 // [Reviews]
-export const getBookReviews = (bookId: number) =>
+export const getBookReviews = (bookId: number | string) =>
   request<{ items: Review[] }>(`/reviews/${bookId}`, { method: "GET" });
 
 export const createReview = (payload: CreateReviewPayload) =>
-  request<{ review: Review }>(`/${payload.bookId}/reviews`, {
+  request<{ review: Review }>(`/reviews/${payload.bookId}`, {
     method: "POST",
     body: JSON.stringify({ rating: payload.rating, comment: payload.comment }),
   });
 
-export const deleteReview = (reviewId: number) =>
+export const deleteReview = (reviewId: number | string) =>
   request<null>(`/reviews/${reviewId}`, { method: "DELETE" });
+
