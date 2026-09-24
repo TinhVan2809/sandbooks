@@ -10,7 +10,7 @@ export const getImageUrl = (imageUrl: string | null | undefined) => {
   return imageUrl.startsWith("http") ? imageUrl : `${API_IMG_URL}${imageUrl}`;
 };
 
-import { type LoginInput, type RegisterPayload, type ApiResponse, type AuthUser, type Book, type CatalogItem, type Category, type CreateBookPayload } from "./type";
+import { type LoginInput, type RegisterPayload, type ApiResponse, type AuthUser, type Book, type CatalogItem, type Category, type CreateBookPayload, type Review, type CreateReviewPayload } from "./type";
 
 class ApiError extends Error {
   status: number;
@@ -139,3 +139,18 @@ export const getBookById = (bookId: number) =>
 
 export const getBooksSavedByUser = () =>
   request<{ items: Book[] }>("/books/saved", { method: "GET" });
+
+
+
+// [Reviews]
+export const getBookReviews = (bookId: number) =>
+  request<{ items: Review[] }>(`/reviews/${bookId}`, { method: "GET" });
+
+export const createReview = (payload: CreateReviewPayload) =>
+  request<{ review: Review }>(`/${payload.bookId}/reviews`, {
+    method: "POST",
+    body: JSON.stringify({ rating: payload.rating, comment: payload.comment }),
+  });
+
+export const deleteReview = (reviewId: number) =>
+  request<null>(`/reviews/${reviewId}`, { method: "DELETE" });

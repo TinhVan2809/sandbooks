@@ -68,3 +68,26 @@ export type Book = {
   createdAt: string | null;
   updatedAt: string | null;
 };
+
+// [Reviews]
+export type Review = {
+  reviewId: number;
+  bookId: number;
+  userId: number;
+  rating: number;
+  comment: string;
+  createdAt: string;
+  updatedAt: string;
+  user: {
+    id: number;
+    username: string;
+    nickname: string;
+    role: string;
+  };
+  bookTitle?: string;
+};
+export type CreateReviewPayload = {
+  bookId: number;
+  rating: number;
+  comment: string;
+};
