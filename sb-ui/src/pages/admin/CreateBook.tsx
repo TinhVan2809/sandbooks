@@ -3,6 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { createBook } from "../../services/api";
 import AuthorSelect from "../../components/admin/AuthorSelect";
 import PublisherSelect from "../../components/admin/PublisherSelect";
+import CreataAuthor from "./CreateAuhtor";
+import CreatePublisher from "./CreatePublisher";
 
 type BookForm = {
   title: string;
@@ -166,6 +168,15 @@ function CreateBook() {
               <button disabled={isSubmitting} type="submit" className="mt-6 w-full rounded-lg bg-white px-4 py-3 text-sm font-semibold text-[#3a5740] transition hover:bg-[#f2f5ef] disabled:cursor-not-allowed disabled:opacity-60">{isSubmitting ? "Đang lưu..." : "Tạo sách"}</button>
               {isCreated && <button type="button" onClick={() => navigate("/admin")} className="mt-3 w-full text-sm font-medium text-[#dce7d9] hover:text-white">Quay lại dashboard</button>}
             </section>
+
+            <div className="flex flex-col gap-5">
+              <section className="rounded-2xl bg-[#3a5740] p-6 text-white shadow-sm" >
+                <CreataAuthor />
+              </section>
+              <section className="rounded-2xl bg-[#3a5740] p-6 text-white shadow-sm" >
+                <CreatePublisher />
+              </section>
+            </div>
           </aside>
         </form>
       </div>
