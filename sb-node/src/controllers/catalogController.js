@@ -18,8 +18,15 @@ const listAuthors = asyncHandler(async (_req, res) => {
 });
 
 const createAuthor = asyncHandler(async (req, res) => {
-  const author = await Author.create(validateName(req.body?.name));
-  res.status(201).json({ success: true, message: "Author created successfully", data: { author } });
+  try {
+    const author = await Author.create(validateName(req.body?.name));
+    res.status(201).json({ success: true, message: "Author created successfully", data: { author } });
+  } catch (error) {
+    if (error.code === "ER_DUP_ENTRY") {
+      throw new AppError("Author already exists", 409);
+    }
+    throw error;
+  }
 });
 
 const listPublishers = asyncHandler(async (_req, res) => {
@@ -27,8 +34,15 @@ const listPublishers = asyncHandler(async (_req, res) => {
 });
 
 const createPublisher = asyncHandler(async (req, res) => {
-  const publisher = await Publisher.create(validateName(req.body?.name));
-  res.status(201).json({ success: true, message: "Publisher created successfully", data: { publisher } });
+  try {
+    const publisher = await Publisher.create(validateName(req.body?.name));
+    res.status(201).json({ success: true, message: "Publisher created successfully", data: { publisher } });
+  } catch (error) {
+    if (error.code === "ER_DUP_ENTRY") {
+      throw new AppError("Publisher already exists", 409);
+    }
+    throw error;
+  }
 });
 
 const listCategories = asyncHandler(async (_req, res) => {

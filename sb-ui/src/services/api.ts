@@ -99,8 +99,10 @@ export const saveBook = (bookId: number) =>
 
 
 export const getAuthors = () => request<{ items: CatalogItem[] }>("/authors", { method: "GET" });
+export const createAuthor = (name: string) => request<{ author: CatalogItem }>("/authors", { method: "POST", body: JSON.stringify({ name }) });
 
 export const getPublishers = () => request<{ items: CatalogItem[] }>("/publishers", { method: "GET" });
+export const createPublisher = (name: string) => request<{ publisher: CatalogItem }>("/publishers", { method: "POST", body: JSON.stringify({ name }) });
 
 export const getCategories = () => request<{ items: Category[] }>("/categories", { method: "GET" });
 
