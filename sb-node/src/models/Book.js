@@ -81,14 +81,29 @@ const getBaseSelect = () => `
   ) review_stats ON review_stats.book_id = b.book_id
 `;
 
-const buildListWhere = ({ search, authorId, publisherId, language, categoryId }) => {
+const buildListWhere = ({ search, name, author, category, authorId, publisherId, language, categoryId }) => {
   const clauses = [];
   const params = [];
 
   if (search) {
-    clauses.push("(b.title LIKE ? OR b.ISBN LIKE ? OR a.author_name LIKE ? OR p.publisher_name LIKE ?)");
+    clauses.push("(b.title LIKE ? OR b.ISBN LIKE ? OR a.author_name LIKE ? OR p.publisher_name LIKE ? OR c.category_name LIKE ?)");
     const keyword = `%${search}%`;
-    params.push(keyword, keyword, keyword, keyword);
+    params.push(keyword, keyword, keyword, keyword, keyword);
+  }
+
+  if (name) {
+    clauses.push("b.title LIKE ?");
+    params.push(`%${name}%`);
+  }
+
+  if (author) {
+    clauses.push("a.author_name LIKE ?");
+    params.push(`%${author}%`);
+  }
+
+  if (category) {
+    clauses.push("c.category_name LIKE ?");
+    params.push(`%${category}%`);
   }
 
   if (authorId) {
@@ -117,9 +132,9 @@ const buildListWhere = ({ search, authorId, publisherId, language, categoryId })
   };
 };
 
-const findMany = async ({ page, limit, search, authorId, publisherId, language, categoryId }) => {
+const findMany = async ({ page, limit, search, name, author, category, authorId, publisherId, language, categoryId }) => {
   const offset = (page - 1) * limit;
-  const { whereSql, params } = buildListWhere({ search, authorId, publisherId, language, categoryId });
+  const { whereSql, params } = buildListWhere({ search, name, author, category, authorId, publisherId, language, categoryId });
   const rows = await db.query(
     `${getBaseSelect()}
      ${whereSql}
@@ -175,14 +190,15 @@ const findRecommended = async (limit = 10) => {
   return rows.map(normalizeBookRow);
 };
 
-const countMany = async ({ search, authorId, publisherId, language, categoryId }) => {
-  const { whereSql, params } = buildListWhere({ search, authorId, publisherId, language, categoryId });
+const countMany = async ({ search, name, author, category, authorId, publisherId, language, categoryId }) => {
+  const { whereSql, params } = buildListWhere({ search, name, author, category, authorId, publisherId, language, categoryId });
   const rows = await db.query(
     `SELECT COUNT(*) AS total
      FROM books b
      LEFT JOIN authors a ON a.author_id = b.author_id
      LEFT JOIN publisher p ON p.publisher_id = b.publisher_id
      LEFT JOIN book_categories bc ON bc.book_id = b.book_id
+    LEFT JOIN categories c ON c.category_id = bc.category_id
      ${whereSql}`,
     params,
   );

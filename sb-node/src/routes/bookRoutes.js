@@ -8,6 +8,7 @@ const { validateListBooks, validateCreateBook } = require("../middlewares/bookVa
 const router = express.Router();
 
 router.get("/", validateListBooks, bookController.listBooks);
+router.get("/search", validateListBooks, bookController.searchBooks);
 router.get("/most-reviewed", bookController.getMostReviewedBooks);
 router.get("/newest", bookController.getNewestBooks);
 router.get("/recommended", bookController.getRecommendedBooks);

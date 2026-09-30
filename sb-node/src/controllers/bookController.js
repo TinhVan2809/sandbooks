@@ -10,6 +10,15 @@ const listBooks = asyncHandler(async (req, res) => {
   });
 });
 
+const searchBooks = asyncHandler(async (req, res) => {
+  const data = await bookService.listBooks(req.query);
+
+  res.status(200).json({
+    success: true,
+    data,
+  });
+});
+
 const getBookById = asyncHandler(async (req, res) => {
   const bookId = parseInt(req.params.id, 10);
   if (isNaN(bookId)) {
@@ -87,6 +96,7 @@ const getSavedBooks = asyncHandler(async (req, res) => {
 
 module.exports = {
   listBooks,
+  searchBooks,
   getBookById,
   createBook,
   getMostReviewedBooks,

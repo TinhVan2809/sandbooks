@@ -1,6 +1,10 @@
-const API_BASE_URL = import.meta.env.PROD ? "https://sandbooks-api.vercel.app/api" : "http://localhost:8000/api";
+const API_BASE_URL = import.meta.env.PROD
+  ? "https://sandbooks-api.vercel.app/api"
+  : "http://localhost:8000/api";
 
-export const API_IMG_URL = import.meta.env.PROD ? "https://sandbooks-api.vercel.app" : "http://localhost:8000";
+export const API_IMG_URL = import.meta.env.PROD
+  ? "https://sandbooks-api.vercel.app"
+  : "http://localhost:8000";
 
 export const getImageUrl = (imageUrl: string | null | undefined) => {
   if (!imageUrl) {
@@ -10,7 +14,18 @@ export const getImageUrl = (imageUrl: string | null | undefined) => {
   return imageUrl.startsWith("http") ? imageUrl : `${API_IMG_URL}${imageUrl}`;
 };
 
-import { type LoginInput, type RegisterPayload, type ApiResponse, type AuthUser, type Book, type CatalogItem, type Category, type CreateBookPayload, type Review, type CreateReviewPayload } from "./type";
+import {
+  type LoginInput,
+  type RegisterPayload,
+  type ApiResponse,
+  type AuthUser,
+  type Book,
+  type CatalogItem,
+  type Category,
+  type CreateBookPayload,
+  type Review,
+  type CreateReviewPayload,
+} from "./type";
 
 class ApiError extends Error {
   status: number;
@@ -22,10 +37,14 @@ class ApiError extends Error {
   }
 }
 
-const rawRequest = async <T>(path: string, options: RequestInit): Promise<ApiResponse<T>> => {
-  const headers = options.body instanceof FormData
-    ? { ...options.headers }
-    : { "Content-Type": "application/json", ...options.headers };
+const rawRequest = async <T>(
+  path: string,
+  options: RequestInit,
+): Promise<ApiResponse<T>> => {
+  const headers =
+    options.body instanceof FormData
+      ? { ...options.headers }
+      : { "Content-Type": "application/json", ...options.headers };
   const response = await fetch(`${API_BASE_URL}${path}`, {
     ...options,
     credentials: "include",
@@ -55,13 +74,22 @@ const refreshAccessToken = () => {
   return refreshPromise;
 };
 
-const request = async <T>(path: string, options: RequestInit, canRefresh = true): Promise<ApiResponse<T>> => {
+const request = async <T>(
+  path: string,
+  options: RequestInit,
+  canRefresh = true,
+): Promise<ApiResponse<T>> => {
   try {
     return await rawRequest<T>(path, options);
   } catch (error) {
     const isAuthRequest = path.startsWith("/auth/");
 
-    if (!(error instanceof ApiError) || error.status !== 401 || !canRefresh || isAuthRequest) {
+    if (
+      !(error instanceof ApiError) ||
+      error.status !== 401 ||
+      !canRefresh ||
+      isAuthRequest
+    ) {
       throw error;
     }
 
@@ -81,10 +109,13 @@ export const getCurrentUser = () =>
   request<{ user: AuthUser }>("/auth/me", { method: "GET" });
 
 export const register = (payload: RegisterPayload) =>
-  request<{ user: { id: number; nickname: string; username: string } }>("/auth/register", {
-    method: "POST",
-    body: JSON.stringify(payload),
-  });
+  request<{ user: { id: number; nickname: string; username: string } }>(
+    "/auth/register",
+    {
+      method: "POST",
+      body: JSON.stringify(payload),
+    },
+  );
 
 export const logout = () =>
   request<null>("/auth/logout", {
@@ -96,15 +127,24 @@ export const saveBook = (bookId: number) =>
     method: "POST",
   });
 
+export const getAuthors = () =>
+  request<{ items: CatalogItem[] }>("/authors", { method: "GET" });
+export const createAuthor = (name: string) =>
+  request<{ author: CatalogItem }>("/authors", {
+    method: "POST",
+    body: JSON.stringify({ name }),
+  });
 
+export const getPublishers = () =>
+  request<{ items: CatalogItem[] }>("/publishers", { method: "GET" });
+export const createPublisher = (name: string) =>
+  request<{ publisher: CatalogItem }>("/publishers", {
+    method: "POST",
+    body: JSON.stringify({ name }),
+  });
 
-export const getAuthors = () => request<{ items: CatalogItem[] }>("/authors", { method: "GET" });
-export const createAuthor = (name: string) => request<{ author: CatalogItem }>("/authors", { method: "POST", body: JSON.stringify({ name }) });
-
-export const getPublishers = () => request<{ items: CatalogItem[] }>("/publishers", { method: "GET" });
-export const createPublisher = (name: string) => request<{ publisher: CatalogItem }>("/publishers", { method: "POST", body: JSON.stringify({ name }) });
-
-export const getCategories = () => request<{ items: Category[] }>("/categories", { method: "GET" });
+export const getCategories = () =>
+  request<{ items: Category[] }>("/categories", { method: "GET" });
 
 export const createBook = (payload: CreateBookPayload, files: File[]) => {
   const formData = new FormData();
@@ -125,8 +165,14 @@ export const createBook = (payload: CreateBookPayload, files: File[]) => {
 
 // [Books]
 export const getListBooks = (page = 1, limit = 10) => {
-  const query = new URLSearchParams({ page: String(page), limit: String(limit) });
-  return request<{ items: Book[], pagination?: { total: number, page: number, totalPages: number } }>(`/books?${query}`, { method: "GET" });
+  const query = new URLSearchParams({
+    page: String(page),
+    limit: String(limit),
+  });
+  return request<{
+    items: Book[];
+    pagination?: { total: number; page: number; totalPages: number };
+  }>(`/books?${query}`, { method: "GET" });
 };
 
 export const getMostReviewedBooks = () =>
@@ -144,7 +190,17 @@ export const getBookById = (bookId: number) =>
 export const getBooksSavedByUser = () =>
   request<{ items: Book[] }>("/books/saved", { method: "GET" });
 
+export const search = (query: string) => {
+  const params = new URLSearchParams({
+    search: query,
+    page: "1",
+    limit: "10",
+  });
 
+  return request<{ items: Book[] }>(`/books/search?${params}`, {
+    method: "GET",
+  });
+};
 
 // [Reviews]
 export const getBookReviews = (bookId: number | string) =>
@@ -158,4 +214,3 @@ export const createReview = (payload: CreateReviewPayload) =>
 
 export const deleteReview = (reviewId: number | string) =>
   request<null>(`/reviews/${reviewId}`, { method: "DELETE" });
-

@@ -1,20 +1,35 @@
 import { RiSearchLine, RiFilterLine } from "@remixicon/react";
+import { useState, type FormEvent } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Search() {
+    const [query, setQuery] = useState("");
+    const navigate = useNavigate();
+
+    const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        const keyword = query.trim();
+        if (!keyword) return;
+        navigate(`/search?q=${encodeURIComponent(keyword)}`);
+    };
+
     return (
         <section className="bg-white border-b border-gray-100">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
                 <span className="block text-xs font-semibold mb-2.5 tracking-widest text-[#6B7568] uppercase">
                     TÌM KIẾM TRONG DANH MỤC
                 </span>
-                <div className="bg-white border border-[#2c5f2d] rounded-lg focus-within:border-[#2c5f2d] focus-within:ring-2 focus-within:ring-[#2c5f2d]/20 transition-all p-2 sm:p-0 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-0">
+                <form onSubmit={handleSubmit} className="bg-white border border-[#2c5f2d] rounded-lg focus-within:border-[#2c5f2d] focus-within:ring-2 focus-within:ring-[#2c5f2d]/20 transition-all p-2 sm:p-0 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-0">
                     {/* Ô nhập từ khóa tìm kiếm */}
                     <div className="flex items-center flex-1 min-w-0 px-2 sm:px-4 py-1 sm:py-0">
                         <RiSearchLine size={20} className="text-[#6b7568] shrink-0" />
                         <input
                             type="text"
+                            value={query}
                             placeholder="Tìm kiếm sách, tác giả, thể loại,..."
                             className="w-full px-3 py-2 sm:py-3.5 text-sm sm:text-base outline-none bg-transparent placeholder:text-gray-400"
+                            onChange={(e) => setQuery(e.target.value)}
+                            aria-label="Tìm kiếm sách, tác giả hoặc thể loại"
                         />
                     </div>
 
@@ -29,16 +44,17 @@ function Search() {
                         </button>
                         <button
                             type="submit"
+                            disabled={!query.trim()}
                             className="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 bg-[#2c5f2d] text-white px-5 py-2 sm:py-2.5 text-sm font-medium rounded-md hover:bg-[#234d24] active:bg-[#1b3d1c] transition-colors shrink-0 shadow-sm cursor-pointer"
                         >
                             <RiSearchLine size={16} className="sm:hidden" />
                             <span>Tìm kiếm</span>
                         </button>
                     </div>
-                </div>
+                </form>
             </div>
         </section>
     );
 }
 
-export default Search;
+export default Search;

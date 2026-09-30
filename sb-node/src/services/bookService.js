@@ -11,16 +11,21 @@ const toPositiveInteger = (value, fallback, max) => {
   return max ? Math.min(parsed, max) : parsed;
 };
 
+const toSearchText = (value) => (typeof value === "string" ? value.trim() : "");
+
 const listBooks = async (query) => {
   const page = toPositiveInteger(query.page, 1);
   const limit = toPositiveInteger(query.limit, 10, 50);
   const filters = {
     page,
     limit,
-    search: query.search ? query.search.trim() : "",
+    search: toSearchText(query.search),
+    name: toSearchText(query.name),
+    author: toSearchText(query.author ?? query.auhtor),
+    category: toSearchText(query.category),
     authorId: query.authorId ? toPositiveInteger(query.authorId, null) : null,
     publisherId: query.publisherId ? toPositiveInteger(query.publisherId, null) : null,
-    language: query.language ? query.language.trim() : "",
+    language: toSearchText(query.language),
     categoryId: query.categoryId ? toPositiveInteger(query.categoryId, null) : null,
   };
 
