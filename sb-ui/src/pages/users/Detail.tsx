@@ -1,9 +1,8 @@
 import { useParams } from "react-router-dom";
-import { getBookById, getImageUrl } from "../../services/api";
+import { getImageUrl } from "../../services/api";
 import { RiStarFill, RiStarHalfFill, RiShareLine } from "@remixicon/react"
-import { useEffect, useState } from "react";
-import type { Book } from "../../services/type";
 import Comment from "../../components/users/Comment";
+import { useGetById } from "../../hooks/useBooks";
 
 function StarRating({ rating }: { rating: number }) {
     const fullStars = Math.floor(rating);
@@ -77,40 +76,13 @@ function Detail() {
 
     const { bookId } = useParams<{ bookId: string }>();
 
-    const [detail, setDetail] = useState<Book | null>(null);
-    const [loading, setLoading] = useState(true);
-
-
-    useEffect(() => {
-        const fetchBookDetail = async () => {
-            setLoading(true);
-            setDetail(null);
-
-            if (!bookId) {
-                setLoading(false);
-                return;
-            }
-
-            const bookIdNumber = parseInt(bookId, 10);
-            try {
-                const response = await getBookById(bookIdNumber);
-                if (response.success) {
-                    setDetail(response.data.book);
-                }
-            } catch (error) {
-                console.error("Error fetching book detail:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchBookDetail();
-    }, [bookId]);
+    const {data, isPending} = useGetById({ bookId: Number(bookId) });
+    const detail = data?.data.book;
 
     return (
         <>
             <section className="">
-                {loading ? (
+                {isPending ? (
                     <DetailSkeleton />
                 ) : detail ? (
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">

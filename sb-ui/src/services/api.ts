@@ -124,8 +124,10 @@ export const createBook = (payload: CreateBookPayload, files: File[]) => {
 };
 
 // [Books]
-export const getListBooks = () =>
-  request<{ items: Book[], pagination?: { total: number, page: number, totalPages: number } }>("/books", { method: "GET" });
+export const getListBooks = (page = 1, limit = 10) => {
+  const query = new URLSearchParams({ page: String(page), limit: String(limit) });
+  return request<{ items: Book[], pagination?: { total: number, page: number, totalPages: number } }>(`/books?${query}`, { method: "GET" });
+};
 
 export const getMostReviewedBooks = () =>
   request<{ items: Book[] }>("/books/most-reviewed", { method: "GET" });
