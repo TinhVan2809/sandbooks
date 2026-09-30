@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { getRecommendedBooks, getImageUrl, getNewestBooks } from "../../services/api";
+import { getImageUrl, getNewestBooks } from "../../services/api";
 import { RiArrowLeftSLine, RiArrowRightSLine } from "@remixicon/react";
 import { Link } from "react-router-dom";
 import { type Book } from "../../services/type";
 import SaveBookButton from "./SaveBookButton";
 import StarRating from "./StartRating";
+import { useGetRecommendedBooks } from "../../hooks/useBooks";
 
 function Card({ card, loading }: { card: Book[]; loading: boolean }) {
     if (loading) {
@@ -77,27 +78,11 @@ function Card({ card, loading }: { card: Book[]; loading: boolean }) {
 }
 
 function Trending() {
-    const [trending, setTrending] = useState<Book[]>([]);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        const handleFetchRecommended = async () => {
-            try {
-                const result = await getRecommendedBooks();
-                if (result.success) {
-                    setTrending(result.data.items);
-                }
-            } catch (_err) {
-                console.log("Error fething trending", _err);
-            } finally {
-                setLoading(false);
-            }
-        }
-        handleFetchRecommended();
-    }, []);
+   const {data, isPending} = useGetRecommendedBooks();
+    const trending = data?.data.items ?? [];
     return (
         <div className="">
-            <Card card={trending} loading={loading} />
+            <Card card={trending} loading={isPending} />
         </div>
     );
 }

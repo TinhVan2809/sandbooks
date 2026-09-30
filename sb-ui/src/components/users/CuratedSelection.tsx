@@ -1,28 +1,9 @@
-import { useEffect, useState } from "react";
-import { type Book } from "../../services/type";
-import { getMostReviewedBooks } from "../../services/api";
 import BookCard from "./BookCard";
+import { useBooks } from "../../hooks/useBooks";
 
 function CuratedSelection() {
 
-    const [mostReviewedBooks, setMostReviewedBooks] = useState<Book[]>([]);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        const handleGetMostReviewedBooks = async () => {
-            try {
-                const result = await getMostReviewedBooks();
-                if (result.success) {
-                    setMostReviewedBooks(result.data.items);
-                }
-            } catch (_err) {
-                console.error("Error fetching most reviewed books", _err);
-            } finally {
-                setLoading(false);
-            }
-        };
-        handleGetMostReviewedBooks();
-    }, []);
+    const {data, isPending} = useBooks();
 
     const skeletons = Array.from({ length: 4 }, (_, index) => (
         <div
@@ -36,7 +17,7 @@ function CuratedSelection() {
                 <div className="h-3 w-1/4 rounded bg-gray-200" />
             </div>
         </div>
-    ));
+    )); 
 
     return (
         <section className="py-16 lg:py-20">
@@ -45,7 +26,7 @@ function CuratedSelection() {
                 <p className="text-[#18181a] font-display font-medium text-xl text-foreground">SÁCH NỔI BẬT</p>
                 <div className="py-10">
 
-                    {loading ? (
+                    {isPending ? (
                         <div
                             className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
                             aria-label="Đang tải sách"
@@ -54,7 +35,7 @@ function CuratedSelection() {
                             {skeletons}
                         </div>
                     ) : (
-                        <BookCard mostReviewedBooks={mostReviewedBooks} />
+                        <BookCard mostReviewedBooks={data?.data.items} />
                     )}
 
                 </div>

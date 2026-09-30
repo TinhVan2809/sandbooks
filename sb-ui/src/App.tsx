@@ -10,6 +10,7 @@ import Discover from "./pages/users/Discover"
 import Categories from "./pages/users/Caterories"
 import MyLybrary from "./pages/users/MyLibrary"
 import Detail from "./pages/users/Detail"
+import { Providers } from "./Providers"
 function App() {
 
   const router = createBrowserRouter([
@@ -45,7 +46,9 @@ function App() {
   ])
   return (
     <>
-      <RouterProvider router={router} />
+    <Providers>
+        <RouterProvider router={router} />
+    </Providers>
     </>
   )
 }

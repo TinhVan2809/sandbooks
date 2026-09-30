@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import Search from "../../components/users/Search";
-import { getListBooks, getImageUrl } from "../../services/api";
+import { getImageUrl } from "../../services/api";
+import { bookListQueryOptions, useBooks } from "../../hooks/useBooks";
 import { type Book } from "../../services/type";
 import BookCardDiscoverMenu from "../../components/users/BookCardDiscoversMenu";
 import { RiLayoutGridLine, RiListUnordered, RiStarFill } from "@remixicon/react";
@@ -84,29 +86,20 @@ function BookCardDiscoverMenuList({ book, loading }: { book: Book[]; loading: bo
 }
 
 function Discover() {
-
-    const [books, setBooks] = useState<Book[]>([]);
-    const [total, setTotal] = useState<number | null>(null);
-    const [loading, setLoading] = useState(true);
-
+    const pageSize = 10;
+    const [page, setPage] = useState(1);
     const [isDisplay, setIsDisplay] = useState("menu");
+    const queryClient = useQueryClient();
+    const { data, isPending } = useBooks(page, pageSize);
+    const books = data?.data.items ?? [];
+    const total = data?.data.pagination?.total ?? 0;
+    const totalPages = data?.data.pagination?.totalPages ?? 1;
 
     useEffect(() => {
-        const handleFetchListBooks = async () => {
-            try {
-                const result = await getListBooks();
-                if (result.success) {
-                    setBooks(result.data.items);
-                    setTotal(result.data?.pagination?.total || 0);
-                }
-            } catch (_err) {
-                console.error("Error fetching list books", _err);
-            } finally {
-                setLoading(false);
-            }
+        if (!isPending && page < totalPages) {
+            void queryClient.prefetchQuery(bookListQueryOptions(page + 1, pageSize));
         }
-        handleFetchListBooks();
-    }, []);
+    }, [isPending, page, pageSize, queryClient, totalPages]);
 
     return (
         <>
@@ -120,7 +113,7 @@ function Discover() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
                 <div className="flex justify-between items-center mb-5">
                     <div className="text-sm text-muted-foreground">
-                        <span>{loading ? "Đang tải sách..." : `${total ?? 0} books found`}</span>
+                        <span>{isPending ? "Đang tải sách..." : `${total} books found`}</span>
                     </div>
                     <div className="flex gap-3 items-center">
                         <select className="bg-white px-3 py-1">
@@ -136,11 +129,30 @@ function Discover() {
                     </div>
                 </div>
                 {isDisplay === "menu" && (
-                    <BookCardDiscoverMenu book={books} loading={loading} />
+                    <BookCardDiscoverMenu book={books} loading={isPending} />
                 )}
                 {isDisplay === "list" && (
-                    <BookCardDiscoverMenuList book={books} loading={loading} />
+                    <BookCardDiscoverMenuList book={books} loading={isPending} />
                 )}
+                <div className="mt-6 flex items-center justify-center gap-4" aria-label="Phân trang danh sách sách">
+                    <button
+                        type="button"
+                        onClick={() => setPage((currentPage) => Math.max(1, currentPage - 1))}
+                        disabled={page <= 1 || isPending}
+                        className="rounded border border-border px-4 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                        Trang trước
+                    </button>
+                    <span className="text-sm text-muted-foreground">Trang {page} / {totalPages}</span>
+                    <button
+                        type="button"
+                        onClick={() => setPage((currentPage) => Math.min(totalPages, currentPage + 1))}
+                        disabled={page >= totalPages || isPending}
+                        className="rounded border border-border px-4 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                        Trang sau
+                    </button>
+                </div>
             </div>
         </>
     );

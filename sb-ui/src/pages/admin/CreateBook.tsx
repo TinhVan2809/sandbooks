@@ -1,6 +1,8 @@
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 import { createBook } from "../../services/api";
+import { bookQueryKeys } from "../../hooks/useBooks";
 import AuthorSelect from "../../components/admin/AuthorSelect";
 import PublisherSelect from "../../components/admin/PublisherSelect";
 import CreataAuthor from "./CreateAuhtor";
@@ -30,6 +32,7 @@ const toOptionalNumber = (value: string) => (value.trim() ? Number(value) : unde
 
 function CreateBook() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [form, setForm] = useState(initialForm);
   const [images, setImages] = useState<File[]>([]);
   const [error, setError] = useState("");
@@ -80,6 +83,7 @@ function CreateBook() {
     setIsSubmitting(true);
     try {
       await createBook(payload, images);
+      await queryClient.invalidateQueries({ queryKey: bookQueryKeys.all });
       setForm(initialForm);
       setImages([]);
       setIsCreated(true);
