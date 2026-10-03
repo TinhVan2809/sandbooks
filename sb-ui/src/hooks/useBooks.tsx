@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query"
-import { getListBooks, getBookById, getRecommendedBooks } from "../services/api";
+import { getListBooks, getBookById, getRecommendedBooks, getNewestBooks } from "../services/api";
 
 export const bookQueryKeys = {
     all: ['books'] as const,
@@ -35,6 +35,16 @@ export function useGetRecommendedBooks() {
         useQuery({
             queryKey: bookQueryKeys.recommended(),
             queryFn: () => getRecommendedBooks(),
+            staleTime: 60 * 1000,
+        })
+    )
+}
+
+export function useGetNewestBooks() {
+    return (
+        useQuery({
+            queryKey: bookQueryKeys.recommended(),
+            queryFn: () => getNewestBooks(),
             staleTime: 60 * 1000,
         })
     )

@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
-import { getImageUrl, getNewestBooks } from "../../services/api";
+import { useState } from "react";
+import { getImageUrl } from "../../services/api";
 import { RiArrowLeftSLine, RiArrowRightSLine } from "@remixicon/react";
 import { Link } from "react-router-dom";
 import { type Book } from "../../services/type";
 import SaveBookButton from "./SaveBookButton";
 import StarRating from "./StartRating";
-import { useGetRecommendedBooks } from "../../hooks/useBooks";
+import { useGetNewestBooks, useGetRecommendedBooks } from "../../hooks/useBooks";
 
 function Card({ card, loading }: { card: Book[]; loading: boolean }) {
     if (loading) {
@@ -88,27 +88,13 @@ function Trending() {
 }
 
 function NewArrivals() {
-    const [newArrivals, setNewArrivals] = useState<Book[]>([]);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        const handleFetchNewArrivals = async () => {
-            try {
-                const result = await getNewestBooks();
-                if (result.success) {
-                    setNewArrivals(result.data.items);
-                }
-            } catch (_err) {
-                console.error("Error fetching New Arrivals", _err);
-            } finally {
-                setLoading(false);
-            }
-        }
-        handleFetchNewArrivals();
-    }, []);
+   
+const {data, isPending} = useGetNewestBooks();
+    const newest = data?.data.items ?? [];
+    
     return (
         <div className="">
-            <Card card={newArrivals} loading={loading} />
+            <Card card={newest} loading={isPending} />
         </div>
     )
 }
