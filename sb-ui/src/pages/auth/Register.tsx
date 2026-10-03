@@ -2,8 +2,10 @@ import { RiEyeLine, RiEyeOffLine } from "@remixicon/react";
 import { useState, type ChangeEvent } from "react";
 import { Link } from "react-router-dom";
 import { register } from "../../services/api";
+import { useNavigate } from "react-router-dom";
 
 function Register() {
+    const navigate = useNavigate();
      const [isShowPassowrd, setIsShowPassword] = useState<boolean>(false);
 
      const [formData, setFormData] = useState({
@@ -27,6 +29,7 @@ function Register() {
              const result = await register(formData);
              if(result.success) {
                 console.log("Register success", result.data);
+                navigate("/login");
              }
         } catch(_err) {
             console.error("Error register", _err);
