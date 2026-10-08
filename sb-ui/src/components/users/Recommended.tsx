@@ -48,7 +48,7 @@ function Card({ card, loading }: { card: Book[]; loading: boolean }) {
                   </div>
                   <div className="p-3 flex flex-col flex-1">
                     <p className="text-[10px] font-medium text-[#84ac51] uppercase tracking-wider mb-1 line-clamp-1">
-                      {r.category?.name || "Khác"}
+                      {r.categories.length > 0 ? r.categories.map((category) => category.name).join(" · ") : "Khác"}
                     </p>
                     <h3 className="text-sm font-semibold text-slate-800 leading-snug line-clamp-2 mb-1 group-hover:text-[#4d7529] transition-colors">
                       {r.title}

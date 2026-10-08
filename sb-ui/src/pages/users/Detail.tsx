@@ -101,7 +101,13 @@ function Detail() {
 
                                 <div className="flex flex-col gap-6">
                                     <div className="">
-                                        <span className="inline-block px-2.5 py-1 bg-secondary text-primary text-xs font-medium rounded-full mb-3">{detail.category?.name || "Khác"}</span>
+                                        <div className="mb-3 flex flex-wrap gap-2">
+                                            {detail.categories.length > 0 ? detail.categories.map((category) => (
+                                                <span key={category.id} className="inline-block rounded-full bg-secondary px-2.5 py-1 text-xs font-medium text-primary">
+                                                    {category.name}
+                                                </span>
+                                            )) : <span className="inline-block rounded-full bg-secondary px-2.5 py-1 text-xs font-medium text-primary">Khác</span>}
+                                        </div>
                                         <h3 className="font-display text-4xl sm:text-5xl text-foreground leading-tight mb-2">{detail.title}</h3>
                                         <span className="text-lg text-muted-foreground">by {detail.author?.name}</span>
                                     </div>

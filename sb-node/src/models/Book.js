@@ -25,12 +25,7 @@ const normalizeBookRow = (row) => {
         name: row.publisher_name,
       }
       : null,
-    category: row.category_id
-      ? {
-        id: row.category_id,
-        name: row.category_name,
-      }
-      : null,
+    categories: [],
     thumbnailUrl: row.thumbnail_url || null,
     rating: Number(row.rating || 0),
     ratingCount: Number(row.rating_count || 0),
@@ -44,6 +39,36 @@ const normalizeImageRow = (row) => ({
   url: row.image_url,
   isThumbnail: Boolean(row.is_thumbnail),
 });
+
+const attachCategories = async (books) => {
+  if (books.length === 0) {
+    return books;
+  }
+
+  const bookIds = books.map((book) => book.id);
+  const placeholders = bookIds.map(() => "?").join(", ");
+  const rows = await db.query(
+    `SELECT bc.book_id, c.category_id, c.category_name
+     FROM book_categories bc
+     INNER JOIN categories c ON c.category_id = bc.category_id
+     WHERE bc.book_id IN (${placeholders})
+     ORDER BY c.category_name ASC`,
+    bookIds,
+  );
+  const categoriesByBookId = new Map(bookIds.map((bookId) => [bookId, []]));
+
+  for (const row of rows) {
+    categoriesByBookId.get(row.book_id)?.push({
+      id: row.category_id,
+      name: row.category_name,
+    });
+  }
+
+  return books.map((book) => ({
+    ...book,
+    categories: categoriesByBookId.get(book.id) || [],
+  }));
+};
 
 const getBaseSelect = () => `
   SELECT
@@ -60,16 +85,12 @@ const getBaseSelect = () => `
     a.author_name,
     p.publisher_id,
     p.publisher_name,
-    c.category_id,
-    c.category_name,
     thumb.image_url AS thumbnail_url,
     COALESCE(review_stats.rating, 0) AS rating,
     COALESCE(review_stats.rating_count, 0) AS rating_count
   FROM books b
   LEFT JOIN authors a ON a.author_id = b.author_id
   LEFT JOIN publisher p ON p.publisher_id = b.publisher_id
-  LEFT JOIN book_categories bc ON bc.book_id = b.book_id
-  LEFT JOIN categories c ON c.category_id = bc.category_id
   LEFT JOIN book_img thumb ON thumb.book_id = b.book_id AND thumb.is_thumbnail = 1
   LEFT JOIN (
     SELECT
@@ -86,7 +107,11 @@ const buildListWhere = ({ search, name, author, category, authorId, publisherId,
   const params = [];
 
   if (search) {
-    clauses.push("(b.title LIKE ? OR b.ISBN LIKE ? OR a.author_name LIKE ? OR p.publisher_name LIKE ? OR c.category_name LIKE ?)");
+    clauses.push(`(b.title LIKE ? OR b.ISBN LIKE ? OR a.author_name LIKE ? OR p.publisher_name LIKE ? OR EXISTS (
+      SELECT 1 FROM book_categories bc_search
+      INNER JOIN categories c_search ON c_search.category_id = bc_search.category_id
+      WHERE bc_search.book_id = b.book_id AND c_search.category_name LIKE ?
+    ))`);
     const keyword = `%${search}%`;
     params.push(keyword, keyword, keyword, keyword, keyword);
   }
@@ -102,7 +127,11 @@ const buildListWhere = ({ search, name, author, category, authorId, publisherId,
   }
 
   if (category) {
-    clauses.push("c.category_name LIKE ?");
+    clauses.push(`EXISTS (
+      SELECT 1 FROM book_categories bc_filter
+      INNER JOIN categories c_filter ON c_filter.category_id = bc_filter.category_id
+      WHERE bc_filter.book_id = b.book_id AND c_filter.category_name LIKE ?
+    )`);
     params.push(`%${category}%`);
   }
 
@@ -122,7 +151,10 @@ const buildListWhere = ({ search, name, author, category, authorId, publisherId,
   }
 
   if (categoryId) {
-    clauses.push("bc.category_id = ?");
+    clauses.push(`EXISTS (
+      SELECT 1 FROM book_categories bc_filter_id
+      WHERE bc_filter_id.book_id = b.book_id AND bc_filter_id.category_id = ?
+    )`);
     params.push(categoryId);
   }
 
@@ -143,7 +175,7 @@ const findMany = async ({ page, limit, search, name, author, category, authorId,
     [...params, limit, offset],
   );
 
-  return rows.map(normalizeBookRow);
+  return attachCategories(rows.map(normalizeBookRow));
 };
 
 /**
@@ -158,7 +190,7 @@ const findMostReviewed = async (limit = 10) => {
     [limit],
   );
 
-  return rows.map(normalizeBookRow);
+  return attachCategories(rows.map(normalizeBookRow));
 };
 
 /**
@@ -172,7 +204,7 @@ const findNewest = async (limit = 10) => {
     [limit],
   );
 
-  return rows.map(normalizeBookRow);
+  return attachCategories(rows.map(normalizeBookRow));
 };
 
 /**
@@ -187,18 +219,16 @@ const findRecommended = async (limit = 10) => {
     [limit],
   );
 
-  return rows.map(normalizeBookRow);
+  return attachCategories(rows.map(normalizeBookRow));
 };
 
 const countMany = async ({ search, name, author, category, authorId, publisherId, language, categoryId }) => {
   const { whereSql, params } = buildListWhere({ search, name, author, category, authorId, publisherId, language, categoryId });
   const rows = await db.query(
-    `SELECT COUNT(*) AS total
+    `SELECT COUNT(DISTINCT b.book_id) AS total
      FROM books b
      LEFT JOIN authors a ON a.author_id = b.author_id
      LEFT JOIN publisher p ON p.publisher_id = b.publisher_id
-     LEFT JOIN book_categories bc ON bc.book_id = b.book_id
-    LEFT JOIN categories c ON c.category_id = bc.category_id
      ${whereSql}`,
     params,
   );
@@ -219,6 +249,8 @@ const findById = async (bookId) => {
     return null;
   }
 
+  const [bookWithCategories] = await attachCategories([book]);
+
   const images = await db.query(
     `SELECT img_id, image_url, is_thumbnail
      FROM book_img
@@ -228,7 +260,7 @@ const findById = async (bookId) => {
   );
 
   return {
-    ...book,
+    ...bookWithCategories,
     images: images.map(normalizeImageRow),
   };
 };
@@ -386,19 +418,22 @@ const findSavedBooks = async (userId) => {
      ORDER BY bs.created_at DESC`,
     [userId]
   );
-  return rows.map(normalizeBookRow);
+  return attachCategories(rows.map(normalizeBookRow));
 };
 
 const getBookBycategory = async (categoryId, limit = 10) => {
   const rows = await db.query(
     `${getBaseSelect()}
-     WHERE bc.category_id = ?
+     WHERE EXISTS (
+       SELECT 1 FROM book_categories bc_filter_id
+       WHERE bc_filter_id.book_id = b.book_id AND bc_filter_id.category_id = ?
+     )
      ORDER BY b.created_at DESC
      LIMIT ?`,
     [categoryId, limit]
   );
   
-  return rows.map(normalizeBookRow);
+  return attachCategories(rows.map(normalizeBookRow));
 }
 
 module.exports = {

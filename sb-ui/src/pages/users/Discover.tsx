@@ -68,9 +68,13 @@ function BookCardDiscoverMenuList({ book, loading }: { book: Book[]; loading: bo
 
                                 {/* Category & Rating */}
                                 <div className="flex flex-col items-end gap-1.5 w-16 sm:w-20">
-                                    <span className="text-[11px] text-accent font-medium capitalize truncate w-full text-right">
-                                        {b.category?.name || "Khác"}
-                                    </span>
+                                    <div className="flex w-16 flex-wrap justify-end gap-1 sm:w-20">
+                                        {b.categories.length > 0 ? b.categories.map((category) => (
+                                            <span key={category.id} className="max-w-full truncate text-[11px] font-medium capitalize text-accent">
+                                                {category.name}
+                                            </span>
+                                        )) : <span className="text-[11px] text-accent">Khác</span>}
+                                    </div>
                                     <div className="flex items-center gap-1 text-xs font-medium text-muted-foreground">
                                         {b.rating ? b.rating.toFixed(1) : "0.0"} 
                                         <RiStarFill className="w-3 h-3" />

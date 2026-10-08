@@ -24,7 +24,10 @@ export default function CategoryDetail() {
                 const response = await getBooksByCategory(Number(categoryId));
                 setBooks(response.data.items);
                 if (response.data.items.length > 0) {
-                    setCategoryName(response.data.items[0].category?.name || "");
+                    const selectedCategory = response.data.items[0].categories.find(
+                        (category) => category.id === Number(categoryId),
+                    );
+                    setCategoryName(selectedCategory?.name || "");
                 }
             } catch {
                 setError("Không thể tải sách trong thể loại này.");

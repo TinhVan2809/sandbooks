@@ -61,7 +61,7 @@ export type Book = {
   status: string;
   author: { id: number; name: string } | null;
   publisher: { id: number; name: string } | null;
-  category: { id: number; name: string } | null;
+  categories: { id: number; name: string }[];
   thumbnailUrl: string | null;
   rating: number;
   ratingCount: number;

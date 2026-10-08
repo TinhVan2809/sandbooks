@@ -37,7 +37,9 @@ function BookCardDiscoverMenu({ book, loading }: { book: Book[]; loading: boolea
                                 <button className="absolute top-2 right-2 w-7 h-7 rounded flex items-center justify-center bg-white/90 backdrop-blur-sm transition-all opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-primary"><RiBookmarkLine size={15} /></button>
                             </div>
                             <div className="p-3">
-                                <p className="text-[10px] font-medium text-accent uppercase tracking-wider mb-1">{b.category?.name || "Khác"}</p>
+                                <p className="mb-1 line-clamp-1 text-[10px] font-medium uppercase tracking-wider text-accent">
+                                    {b.categories.length > 0 ? b.categories.map((category) => category.name).join(" · ") : "Khác"}
+                                </p>
                                 <h3 className="text-sm font-medium text-foreground leading-snug line-clamp-2 mb-0.5">{b.title}</h3>
                                 <p className="text-xs text-muted-foreground">{b.author?.name || "Đang cập nhật"}</p>
                                 <div className="flex items-center gap-1 mt-2">
