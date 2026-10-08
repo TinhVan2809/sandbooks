@@ -107,6 +107,24 @@ const getSavedBooks = async (userId) => {
   return Book.findSavedBooks(parsedUserId);
 };
 
+const getBookByCategory = async (categoryId, query) => {
+  const parsedCategoryId = toPositiveInteger(categoryId, null);
+  if (!parsedCategoryId) throw new AppError("Invalid category ID", 400);
+
+  const page = toPositiveInteger(query.page, 1);
+  const limit = toPositiveInteger(query.limit, 10, 50);
+
+  const filters = {
+    page,
+    limit,
+    categoryId: parsedCategoryId,
+    search: toSearchText(query.search),
+    name: toSearchText(query.name),
+  };
+
+  return Book.getBookBycategory(parsedCategoryId, limit);
+};
+
 module.exports = {
   listBooks,
   getBookById,
@@ -117,4 +135,5 @@ module.exports = {
   saveBook,
   unsaveBook,
   getSavedBooks,
+  getBookByCategory,
 };

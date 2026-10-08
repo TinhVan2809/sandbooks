@@ -202,6 +202,11 @@ export const search = (query: string) => {
   });
 };
 
+export const getBooksByCategory = (categoryId: number) =>
+  request<{ items: Book[] }>(`/books/category/${categoryId}`, {
+    method: "GET",
+  });
+  
 // [Reviews]
 export const getBookReviews = (bookId: number | string) =>
   request<{ items: Review[] }>(`/reviews/${bookId}`, { method: "GET" });

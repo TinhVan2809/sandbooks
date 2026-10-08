@@ -389,6 +389,18 @@ const findSavedBooks = async (userId) => {
   return rows.map(normalizeBookRow);
 };
 
+const getBookBycategory = async (categoryId, limit = 10) => {
+  const rows = await db.query(
+    `${getBaseSelect()}
+     WHERE bc.category_id = ?
+     ORDER BY b.created_at DESC
+     LIMIT ?`,
+    [categoryId, limit]
+  );
+  
+  return rows.map(normalizeBookRow);
+}
+
 module.exports = {
   findMany,
   countMany,
@@ -400,4 +412,5 @@ module.exports = {
   saveBook,
   unsaveBook,
   findSavedBooks,
+  getBookBycategory,
 };

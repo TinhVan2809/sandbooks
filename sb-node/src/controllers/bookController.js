@@ -94,6 +94,12 @@ const getSavedBooks = asyncHandler(async (req, res) => {
   res.status(200).json({ success: true, data: { items } });
 });
 
+const getBookByCategory = asyncHandler(async (req, res) => {
+  const { categoryId } = req.params;
+  const items = await bookService.getBookByCategory(categoryId, req.query);
+  res.status(200).json({ success: true, data: { items } });
+});
+
 module.exports = {
   listBooks,
   searchBooks,
@@ -105,4 +111,5 @@ module.exports = {
   saveBook,
   unsaveBook,
   getSavedBooks,
+  getBookByCategory,
 };

@@ -7,11 +7,12 @@ import AdminLayout from "./layout/AdminLayout"
 import Dashboard from "./pages/admin/Dashboard"
 import CreateBook from "./pages/admin/CreateBook"
 import Discover from "./pages/users/Discover"
-import Categories from "./pages/users/Caterories"
+import Categories from "./pages/users/Categories"
 import MyLybrary from "./pages/users/MyLibrary"
 import Detail from "./pages/users/Detail"
 import SearchResults from "./pages/users/SearchResults"
 import { Providers } from "./Providers"
+import CategoryDetail from "./pages/users/CategoryDetail"
 function App() {
 
   const router = createBrowserRouter([
@@ -22,6 +23,7 @@ function App() {
         { index: true, element: <Home /> },
         { path: "/discovery", element: <Discover /> },
         { path: "/categories", element: <Categories /> },
+        { path: "/categories/:categoryId", element: <CategoryDetail /> },
         { path: "/my-library", element: <MyLybrary /> },
         { path: "/detail/:bookId", element: <Detail /> },
         { path: "/search", element: <SearchResults /> },

@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import { getCategories } from "../../services/api";
 import type { Category } from "../../services/type";
+import { Link } from "react-router-dom";
 
 function CategoryCard({ category }: { category: Category }) {
     return (
-        <button className="group bg-white p-5 text-left hover:bg-[#eef3ea] transition-colors">
+        <Link to={`/categories/${category.id}`} className="group block bg-white p-5 text-left transition-colors hover:bg-[#eef3ea]">
             <h3 className="text-base font-semibold text-foreground mb-1 group-hover:text-primary transition-colors">{category.name}</h3>
             <p className="text-xs text-muted-foreground leading-relaxed">{category.description}</p>
-        </button>
+        </Link>
     )
 }
 
